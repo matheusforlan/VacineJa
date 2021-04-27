@@ -1,13 +1,13 @@
-package com.ufcg.psoft.mercadofacil;
+package com.vacinaja;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class MercadoFacilApplication {
+public class VacinaJaApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(MercadoFacilApplication.class, args);
+		SpringApplication.run(VacinaJaApplication.class, args);
 	}
 
 }

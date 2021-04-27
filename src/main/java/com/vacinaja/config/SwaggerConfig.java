@@ -1,4 +1,4 @@
-package com.ufcg.psoft.mercadofacil.config;
+package com.vacinaja.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,7 +14,7 @@ public class SwaggerConfig {
     @Bean
     public Docket productApi() {
         return new Docket(DocumentationType.SWAGGER_2)
-                .select().apis(RequestHandlerSelectors.basePackage("com.ufcg.psoft.mercadofacil"))
+                .select().apis(RequestHandlerSelectors.basePackage("com.vacinaja"))
                 .build();
     }
 }

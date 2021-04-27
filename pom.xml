@@ -9,11 +9,11 @@
 		<version>2.3.3.RELEASE</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.ufcg.psoft</groupId>
-	<artifactId>estoquefacil</artifactId>
+	<groupId>com.vacinaja</groupId>
+	<artifactId>vacinaja</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>estoquefacil</name>
-	<description>Projeto Estoque Fácil</description>
+	<name>vacinaja</name>
+	<description>Projeto Vacina Ja</description>
 
 	<properties>
 		<java.version>1.8</java.version>

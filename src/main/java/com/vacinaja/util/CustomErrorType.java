@@ -1,4 +1,4 @@
-package com.ufcg.psoft.mercadofacil.util;
+package com.vacinaja.util;
 
 
 public class CustomErrorType {

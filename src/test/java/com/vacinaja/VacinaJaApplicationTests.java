@@ -1,10 +1,10 @@
-package com.ufcg.psoft.mercadofacil;
+package com.vacinaja;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class MercadoFacilApplicationTests {
+class VacinaJaApplicationTests {
 
 	@Test
 	void contextLoads() {
