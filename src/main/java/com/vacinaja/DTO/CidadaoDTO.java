@@ -59,7 +59,7 @@ public class CidadaoDTO {
         this.nome = nome;
     }
 
-    public Date getDataNasc() {
+    public  Date getDataNasc() {
         return this.dataNasc;
     }
 
