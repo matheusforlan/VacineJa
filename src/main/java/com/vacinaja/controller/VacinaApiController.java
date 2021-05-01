@@ -32,7 +32,7 @@ public class VacinaApiController {
     public ResponseEntity<?> cadastrarVacina(@RequestBody VacinaDTO vacinaDTO, UriComponentsBuilder ucBuilder) {
         Optional<Vacina> vacina = vacinaService.getVacinaById(vacinaDTO.getId());
 
-        if (!vacina.isEmpty()) {
+        if (!vacina.isPresent()) {
             return ErroVacina.erroVacinaJaCadastrada(vacinaDTO.getId());
         }
 

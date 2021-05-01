@@ -32,7 +32,7 @@ public class CidadaoApiController {
     public ResponseEntity<?> cadastrarCidadao(@RequestBody CidadaoDTO cidadaoDTO, UriComponentsBuilder ucBuilder){
         Optional<Cidadao> cidadao = cidadaoService.getCidadaoByCpf(cidadaoDTO.getCpf());
 
-        if(!cidadao.isEmpty()){
+        if(!cidadao.isPresent()){
             return ErroCidadao.erroCidadaoJaCadastrado(cidadaoDTO.getCpf());
         }
         cidadaoService.cadastrarCidadao(cidadaoDTO);

@@ -42,7 +42,7 @@ public class FuncionarioApiController {
         
         Optional<Funcionario> funcionario = funcionarioService.getFuncionarioByCpf(funcionarioDTO.getCpf());
         
-        if(!funcionario.isEmpty()){
+        if(!funcionario.isPresent()){
             return ErroFuncionario.erroFuncionarioJaCadastrado(funcionarioDTO.getCpf());
         }
         
