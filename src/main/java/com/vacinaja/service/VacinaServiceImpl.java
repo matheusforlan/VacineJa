@@ -8,7 +8,9 @@ import com.vacinaja.model.Vacina;
 import com.vacinaja.repository.VacinaRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class VacinaServiceImpl implements VacinaService{
 
     @Autowired
