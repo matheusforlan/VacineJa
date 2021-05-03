@@ -8,7 +8,9 @@ import com.vacinaja.model.Vacina;
 import com.vacinaja.repository.VacinaRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+@Service
 public class VacinaServiceImpl implements VacinaService{
 
     @Autowired
@@ -36,7 +38,7 @@ public class VacinaServiceImpl implements VacinaService{
 
     @Override
     public Vacina cadastrarVacina(VacinaDTO vacinaDTO) {
-        Vacina vacina = new Vacina(vacinaDTO.getNome(), vacinaDTO.getFabricante(), vacinaDTO.getDiasParaSegundaDose());
+        Vacina vacina = new Vacina(vacinaDTO.getNome(), vacinaDTO.getFabricante(), vacinaDTO.getDiasParaSegundaDose(), vacinaDTO.getQuantidadeDoses());
 
         vacinaRepository.save(vacina);
 

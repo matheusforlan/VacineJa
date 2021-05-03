@@ -18,14 +18,17 @@ public class Vacina {
 
     private String fabricante;
 
-    private BigInteger diasParaSegundaDose;
+    private int diasParaSegundaDose;
+
+    private int quantidadeDoses;
 
     Vacina(){}
 
-    public Vacina(String nome, String fabricante, BigInteger diasParaSegundaDose) {
+    public Vacina(String nome, String fabricante, int diasParaSegundaDose, int quantidadeDoses) {
         this.nome = nome;
         this.fabricante = fabricante;
         this.diasParaSegundaDose = diasParaSegundaDose;
+        this.quantidadeDoses = quantidadeDoses;
     }
 
     public Long getId() {
@@ -48,16 +51,20 @@ public class Vacina {
         this.fabricante = fabricante;
     }
 
-    public BigInteger getDiasParaSegundaDose() {
+    public int getDiasParaSegundaDose() {
         return this.diasParaSegundaDose;
     }
 
-    public void setDiasParaSegundaDose(BigInteger diasParaSegundaDose) {
+    public void setDiasParaSegundaDose(int diasParaSegundaDose) {
         this.diasParaSegundaDose = diasParaSegundaDose;
     }
 
     public String toString() {
         return this.id + " - " + this.nome + " - " + this.fabricante;
+    }
+
+    public int getQuantidadeDoses() {
+        return this.quantidadeDoses;
     }
     
 }
