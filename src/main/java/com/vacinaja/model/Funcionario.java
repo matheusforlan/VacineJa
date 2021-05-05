@@ -2,13 +2,7 @@ package com.vacinaja.model;
 
 import java.sql.Date;
 
-import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
 
 import com.vacinaja.DTO.FuncionarioDTO;
 

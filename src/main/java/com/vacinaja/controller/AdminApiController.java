@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import com.vacinaja.DTO.AdminDTO;
-import com.vacinaja.DTO.FuncionarioDTO;
 import com.vacinaja.model.Admin;
 import com.vacinaja.model.Funcionario;
 import com.vacinaja.service.AdminService;

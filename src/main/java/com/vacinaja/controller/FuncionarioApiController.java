@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.vacinaja.DTO.CidadaoDTO;
 import com.vacinaja.DTO.FuncionarioDTO;
 import com.vacinaja.model.Cidadao;
 import com.vacinaja.model.Funcionario;
