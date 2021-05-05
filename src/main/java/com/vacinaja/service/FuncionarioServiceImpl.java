@@ -20,7 +20,6 @@ public class FuncionarioServiceImpl implements FuncionarioService {
 	@Override
 	public void salvarFuncionario(Funcionario funcionario) {
 		funcionarioRepository.save(funcionario);
-		
 	}
 
 	@Override

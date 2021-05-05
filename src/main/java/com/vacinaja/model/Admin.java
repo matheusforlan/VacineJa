@@ -8,77 +8,22 @@ import javax.persistence.Id;
 public class Admin {
 	
 	@Id
-	String cpf;
-
-	String email;
+	String user;
 	
 	String senha;
-	
-	String telefone;
-	
-	
+
 	Admin() {}
-	
-	
-	public Admin (String cpf, String email, String senha, String telefone) {
-		this.cpf = cpf;
-		this.email = email;
-		this.senha = senha;
-		this.telefone = telefone;
 		
+	public Admin (String user, String senha) {
+		this.user = user;
+		this.senha = senha;
 	}
 
-
-	public String getCpf() {
-		return cpf;
+	public String getUser() {
+		return user;
 	}
-
-
-	public void setCpf(String cpf) {
-		this.cpf = cpf;
-	}
-
-
-	public String getEmail() {
-		return email;
-	}
-
-
-	public void setEmail(String email) {
-		this.email = email;
-	}
-
 
 	public String getSenha() {
 		return senha;
 	}
-
-
-	public void setSenha(String senha) {
-		this.senha = senha;
-	}
-
-
-	public String getTelefone() {
-		return telefone;
-	}
-
-
-	public void setTelefone(String telefone) {
-		this.telefone = telefone;
-	}
-
-
-	public String toString () {
-		
-		return this.cpf + " " + this.email + " " + this.telefone ;
-		
-	}
-	
-	
-	
-	
-	
-	
-
 }

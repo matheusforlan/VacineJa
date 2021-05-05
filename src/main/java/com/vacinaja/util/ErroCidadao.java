@@ -3,9 +3,6 @@ package com.vacinaja.util;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import com.vacinaja.DTO.CidadaoDTO;
-import com.vacinaja.model.Cidadao;
-
 public class ErroCidadao {
 
     static final String CIDADAO_NAO_CASTRADO = "Cidadao com cpf %s não está cadastrado.";

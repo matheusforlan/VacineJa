@@ -3,7 +3,6 @@ package com.vacinaja.util;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
-import com.vacinaja.DTO.AdminDTO;
 import com.vacinaja.model.Admin;
 
 public class ErroAdmin {
@@ -23,27 +22,14 @@ static final String admin_NAO_CADASTRADO = "Administrador com cpf %s não está 
 		return new ResponseEntity<CustomErrorType>(new CustomErrorType(String.format(ErroAdmin.admin_NAO_CADASTRADO, id)),
 				HttpStatus.NOT_FOUND);
 	}
-	
-	public static ResponseEntity<CustomErrorType> erroSemAdminCadastrados() {		
-		return new ResponseEntity<CustomErrorType>(new CustomErrorType(ErroAdmin.Admin_NAO_CADASTRADOS),
-				HttpStatus.NO_CONTENT);
-	}
 
 	public static ResponseEntity<?> erroMudarSituacao(Admin admin) {
 		return new ResponseEntity<CustomErrorType>(new CustomErrorType(String.format(ErroAdmin.NAO_FOI_POSSIVEL_ATUALIZAR,
-				admin.getCpf())), HttpStatus.NOT_MODIFIED);
-	}
-	
-	public static ResponseEntity<?> ErroAdminJaCadastrado(AdminDTO adminDTO) {
-		return new ResponseEntity<CustomErrorType>(new CustomErrorType(String.format(ErroAdmin.admin_JA_CADASTRADO,
-				adminDTO.getCpf())), HttpStatus.CONFLICT);
+				admin.getUser())), HttpStatus.NOT_MODIFIED);
 	}
 	
 	public static ResponseEntity<?> ErroNenhumFuncionarioAAprovar() {
 		return new ResponseEntity<CustomErrorType>(new CustomErrorType(ErroAdmin.NENHUM_FUNCIONARIO_A_APROVAR)
 				, HttpStatus.NO_CONTENT);
 	}
-	
-	
-
 }
