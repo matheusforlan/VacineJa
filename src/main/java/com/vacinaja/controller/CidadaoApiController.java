@@ -31,8 +31,9 @@ public class CidadaoApiController {
     @RequestMapping(value = "/cadastro-cidadao", method = RequestMethod.POST)
     public ResponseEntity<?> cadastrarCidadao(@RequestBody CidadaoDTO cidadaoDTO, UriComponentsBuilder ucBuilder){
         Optional<Cidadao> cidadao = cidadaoService.getCidadaoByCpf(cidadaoDTO.getCpf());
-
-        if(!cidadao.isPresent()){
+        
+        // aqui seria ciadao.isPresent(), porque eu toiu cadastrando.
+        if(cidadao.isPresent()){
             return ErroCidadao.erroCidadaoJaCadastrado(cidadaoDTO.getCpf());
         }
         cidadaoService.cadastrarCidadao(cidadaoDTO);

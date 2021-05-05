@@ -1,11 +1,13 @@
 package com.vacinaja.repository;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import com.vacinaja.model.Entitys;
+import com.google.common.base.Optional;
+import com.vacinaja.model.*;
 
 @Repository
-public interface EntityRepository extends JpaRepository<Entitys, Long>{
+public interface AdminRepository extends JpaRepository<Admin,String> {
+	
+	
 
 }
