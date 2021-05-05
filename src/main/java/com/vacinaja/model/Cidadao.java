@@ -1,13 +1,9 @@
 package com.vacinaja.model;
 
-import java.math.BigDecimal;
 import java.sql.Date;
-import java.util.*;
-
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
+
 
 
 
@@ -55,10 +51,6 @@ public class Cidadao {
 
     public String getCpf() {
         return this.cpf;
-    }
-
-    public void setCpf(String cpf) {
-        this.cpf = cpf;
     }
 
     public String getNome() {

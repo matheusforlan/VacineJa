@@ -1,9 +1,9 @@
 package com.vacinaja.service;
 
-import java.util.Optional;
-
 import com.vacinaja.DTO.CidadaoDTO;
 import com.vacinaja.model.Cidadao;
+import java.util.Optional;
+
 
 public interface CidadaoService {
 
@@ -14,5 +14,7 @@ public interface CidadaoService {
     public void salvarCidadao(Cidadao cidadao);
 
     public void cadastrarCidadao(CidadaoDTO cidadaoDTO);
+
+    public void atualizarCidadao(CidadaoDTO cidadaoDTO, Cidadao cidadao);
     
 }

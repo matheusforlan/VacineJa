@@ -1,14 +1,14 @@
 package com.vacinaja.service;
 
-import java.util.Optional;
-
 import com.vacinaja.DTO.CidadaoDTO;
 import com.vacinaja.model.Cidadao;
-
 import com.vacinaja.repository.CidadaoRepository;
-
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+
+
 
 @Service
 public class CidadaoServiceImpl implements CidadaoService{
@@ -38,6 +38,17 @@ public class CidadaoServiceImpl implements CidadaoService{
         Cidadao cidadao = new Cidadao(cidadaoDTO.getCpf(), cidadaoDTO.getNome(), cidadaoDTO.getDataNasc(), cidadaoDTO.getCartaoSus(), 
         cidadaoDTO.getTelefone(), cidadaoDTO.getEmail(), cidadaoDTO.getProfissao(), cidadaoDTO.getComorbidades(), cidadaoDTO.getSenha());
         cidadaoRepository.save(cidadao);
+    }
+
+    @Override
+    public void atualizarCidadao(CidadaoDTO cidadaoDTO, Cidadao cidadao) { 
+        cidadao.setNome(cidadaoDTO.getNome());
+        cidadao.setDataNasc(cidadaoDTO.getDataNasc());
+        cidadao.setCartaoSus(cidadaoDTO.getCartaoSus());
+        cidadao.setTelefone(cidadaoDTO.getTelefone());
+        cidadao.setEmail(cidadaoDTO.getEmail());
+        cidadao.setProfissao(cidadaoDTO.getProfissao());
+        cidadao.setComorbidades(cidadaoDTO.getComorbidades());
     }
 
 }
