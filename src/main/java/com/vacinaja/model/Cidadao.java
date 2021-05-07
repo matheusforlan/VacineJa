@@ -1,9 +1,11 @@
 package com.vacinaja.model;
 
 import java.sql.Date;
-
 import javax.persistence.Entity;
 import javax.persistence.Id;
+
+
+
 
 @Entity
 public class Cidadao {
@@ -49,10 +51,6 @@ public class Cidadao {
 
     public String getCpf() {
         return this.cpf;
-    }
-
-    public void setCpf(String cpf) {
-        this.cpf = cpf;
     }
 
     public String getNome() {

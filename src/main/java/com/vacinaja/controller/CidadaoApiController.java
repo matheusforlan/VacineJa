@@ -1,16 +1,15 @@
 package com.vacinaja.controller;
 
-import java.sql.Date;
-import java.util.Optional;
-
+import com.vacinaja.DTO.AgendamentoVacinacaoDTO;
 import com.vacinaja.DTO.CidadaoDTO;
 import com.vacinaja.model.Cidadao;
+import com.vacinaja.service.AgendamentoVacinacaoService;
 import com.vacinaja.service.CidadaoService;
 import com.vacinaja.util.ErroCidadao;
-
+import java.util.Optional;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
+
+
 @RestController
 @RequestMapping("/api")
 @CrossOrigin
@@ -26,6 +27,9 @@ public class CidadaoApiController {
     
     @Autowired
     CidadaoService cidadaoService;
+
+    @Autowired
+    AgendamentoVacinacaoService agendamentoVacinacaoService;
  
     // ------------------------------------------ cadastro de cidadao ------------------------------------------
     @RequestMapping(value = "/cadastro-cidadao", method = RequestMethod.POST)
@@ -41,88 +45,23 @@ public class CidadaoApiController {
         return new ResponseEntity<CidadaoDTO>(cidadaoDTO, HttpStatus.OK);
     }
 
-
     
-    // ------------------------------------------ metodos de atualizacao de dados usuario ------------------------------------------
+    // ------------------------------------------ atualização de dados do cidadao ------------------------------------------
+    @RequestMapping(value = "/cidadao/{cpf}", method = RequestMethod.PUT)
+    public ResponseEntity<?> atualizarCidadao(@PathVariable("cpf") String cpf, @RequestBody CidadaoDTO cidadaoDTO) {
 
-    // alterar nome do cidadao
-    @RequestMapping(value = "/{cpf}/alterarNome", method = RequestMethod.PUT)
-    public ResponseEntity<?> alterarNome(@PathVariable("cpf") String cpf, @RequestBody String nome){
         Optional<Cidadao> optionalCidadao = cidadaoService.getCidadaoByCpf(cpf);
-        
-        if(!optionalCidadao.isPresent()){
+
+        if (!optionalCidadao.isPresent()) {
             return ErroCidadao.erroCidadaoNaoEncontrado(cpf);
         }
+
         Cidadao cidadao = optionalCidadao.get();
-        cidadao.setNome(nome);
 
-        cidadaoService.salvarCidadao(cidadao);
-
-        return new ResponseEntity<Cidadao>(cidadao, HttpStatus.OK);
-    }
-
-    //alterar telefone do cidadao
-    @RequestMapping(value = "/{cpf}/alterarTelefone", method = RequestMethod.PUT)
-    public ResponseEntity<?> alterarTelefone(@PathVariable("cpf") String cpf, @RequestBody String telefone){
-        Optional<Cidadao> optionalCidadao = cidadaoService.getCidadaoByCpf(cpf);
-        
-        if(!optionalCidadao.isPresent()){
-            return ErroCidadao.erroCidadaoNaoEncontrado(cpf);
+        if (cidadao.getCpf().equals(cidadaoDTO.getCpf()) && cidadao.getSenha().equals(cidadaoDTO.getSenha())) {
+            cidadaoService.atualizarCidadao(cidadaoDTO, cidadao);
+            cidadaoService.salvarCidadao(cidadao);
         }
-        Cidadao cidadao = optionalCidadao.get();
-        cidadao.setTelefone(telefone);
-
-        cidadaoService.salvarCidadao(cidadao);
-
-        return new ResponseEntity<Cidadao>(cidadao, HttpStatus.OK);
-    }
-
-
-    //alterar email do cidadao
-    @RequestMapping(value = "/{cpf}/alterarEmail", method = RequestMethod.PUT)
-    public ResponseEntity<?> alterarEmail(@PathVariable("cpf") String cpf, @RequestBody String email){
-        Optional<Cidadao> optionalCidadao = cidadaoService.getCidadaoByCpf(cpf);
-        
-        if(!optionalCidadao.isPresent()){
-            return ErroCidadao.erroCidadaoNaoEncontrado(cpf);
-        }
-        Cidadao cidadao = optionalCidadao.get();
-        cidadao.setEmail(email);
-
-        cidadaoService.salvarCidadao(cidadao);
-
-        return new ResponseEntity<Cidadao>(cidadao, HttpStatus.OK);
-    }
-
-    //alterar profissao do cidadao
-    @RequestMapping(value = "/{cpf}/alterarProfissao", method = RequestMethod.PUT)
-    public ResponseEntity<?> alterarProfissao(@PathVariable("cpf") String cpf, @RequestBody String profissao){
-        Optional<Cidadao> optionalCidadao = cidadaoService.getCidadaoByCpf(cpf);
-        
-        if(!optionalCidadao.isPresent()){
-            return ErroCidadao.erroCidadaoNaoEncontrado(cpf);
-        }
-        Cidadao cidadao = optionalCidadao.get();
-        cidadao.setProfissao(profissao);
-
-        cidadaoService.salvarCidadao(cidadao);
-
-        return new ResponseEntity<Cidadao>(cidadao, HttpStatus.OK);
-    }
-
-    
-    //alterar comorbidades do cidadao
-    @RequestMapping(value = "/{cpf}/alterarComorbidades", method = RequestMethod.PUT)
-    public ResponseEntity<?> alterarComorbidades(@PathVariable("cpf") String cpf, @RequestBody String comorbidades){
-        Optional<Cidadao> optionalCidadao = cidadaoService.getCidadaoByCpf(cpf);
-        
-        if(!optionalCidadao.isPresent()){
-            return ErroCidadao.erroCidadaoNaoEncontrado(cpf);
-        }
-        Cidadao cidadao = optionalCidadao.get();
-        cidadao.setComorbidades(comorbidades);
-
-        cidadaoService.salvarCidadao(cidadao);
 
         return new ResponseEntity<Cidadao>(cidadao, HttpStatus.OK);
     }
@@ -143,20 +82,31 @@ public class CidadaoApiController {
         return new ResponseEntity<Cidadao>(cidadao, HttpStatus.OK);
     }
 
-
-    //alterar data de nascimento do cidadao
-    @RequestMapping(value = "/{cpf}/alterarDataNascimento", method = RequestMethod.PUT)
-    public ResponseEntity<?> alterarDataNascimento(@PathVariable("cpf") String cpf, @RequestBody Date dataNasc){
+    @RequestMapping(value = "/{cpf}/agendar-vacinacao", method = RequestMethod.POST)
+    public ResponseEntity<?> agendarVacinacao(@PathVariable("cpf") String cpf, @RequestBody AgendamentoVacinacaoDTO agendamentoVacinacaoDTO) {
         Optional<Cidadao> optionalCidadao = cidadaoService.getCidadaoByCpf(cpf);
-        
-        if(!optionalCidadao.isPresent()){
+
+        if (!optionalCidadao.isPresent()) {
             return ErroCidadao.erroCidadaoNaoEncontrado(cpf);
         }
+
         Cidadao cidadao = optionalCidadao.get();
-        cidadao.setDataNasc(dataNasc);
 
-        cidadaoService.salvarCidadao(cidadao);
+        /*
+        if (!cidadao.habilitadoDose1()) {
+            return ErroAplicacao.erroCidadaoNaoHabilitadoParaVacina(cpf);
+        }
 
-        return new ResponseEntity<Cidadao>(cidadao, HttpStatus.OK);
+        Optional<AgendamentoVacinacao> optionalAgendamentoVacinacao = agendamentoVacinacaoService.getAgendamentoVacinacaoById(agendamentoVacinacaoDTO.getId());
+
+        if (optionalAgendamentoVacinacao.isPresent()) {
+            return ErroAgendamentoVacinacao.erroDataHorarioJaAgendados(agendamentoVacinacaoDTO.getId());
+        }
+
+        agendamentoVacinacaoService.cadastrarAgendamentoVacinacao(agendamentoVacinacaoDTO);
+        */
+
+        return new ResponseEntity<AgendamentoVacinacaoDTO>(agendamentoVacinacaoDTO, HttpStatus.OK);
     }
+
 }
