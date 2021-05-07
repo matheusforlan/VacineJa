@@ -1,6 +1,7 @@
 package com.vacinaja.service;
 
 
+import java.util.List;
 import java.util.Optional;
 
 import com.vacinaja.DTO.FuncionarioDTO;
@@ -13,5 +14,7 @@ public interface FuncionarioService {
     public void salvarFuncionario(Funcionario funcionario);
 
     public void cadastrarFuncionario(FuncionarioDTO funcionarioDTO);
+
+	public List<Funcionario> listarFuncionariosNaoAprovados();
 
 }

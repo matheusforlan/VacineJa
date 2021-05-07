@@ -3,20 +3,20 @@ package com.vacinaja.model;
 import java.sql.Date;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+
+import com.vacinaja.DTO.FuncionarioDTO;
 
 @Entity
 public class Funcionario extends Cidadao{
 	
 	private String cargo;
 	private String localDeTrabalho;
+	boolean isAprovado;
 	
-	Funcionario(){}
+
+	Funcionario() {}
 
 	public Funcionario(String cargo, String localDeTrabalho) {
-		super();
 		this.cargo = cargo;
 		this.localDeTrabalho = localDeTrabalho;
 	}
@@ -27,6 +27,18 @@ public class Funcionario extends Cidadao{
 		super(cpf, nome, dataNasc, cartaoSus, telefone, email, profissao, comorbidades,
 			senha);
 		
+	}
+	
+	
+	//  criei esse construtor com DTO, pra poder coloar a primary key(cpf)
+	public Funcionario(FuncionarioDTO funcionarioDTO) {
+		super(funcionarioDTO.getCpf(), funcionarioDTO.getNome(),funcionarioDTO.getDataNasc(),
+				funcionarioDTO.getCartaoSus(), funcionarioDTO.getTelefone(), funcionarioDTO.getEmail(),
+				funcionarioDTO.getProfissao(), funcionarioDTO.getComorbidades(),
+				funcionarioDTO.getSenha());
+		this.cargo = funcionarioDTO.getCargo();
+		this.localDeTrabalho = funcionarioDTO.getLocalDeTrabalho();
+		this.isAprovado = false;
 	}
 
 	public String getCargo() {
@@ -44,15 +56,21 @@ public class Funcionario extends Cidadao{
 	public void setLocalDeTrabalho(String localDeTrabalho) {
 		this.localDeTrabalho = localDeTrabalho;
 	}
+	
+	public boolean isAprovado() {
+		return isAprovado;
+	}
+
+	public void setAprovado(boolean isAprovado) {
+		this.isAprovado = isAprovado;
+	}
 
 	@Override
 	public String toString() {
 		return "Funcionário:" + super.getNome() + " cargo:" + this.cargo + ", localDeTrabalho:" + this.localDeTrabalho ;
 	}
-
-	
-	
-	
 	
 
+	
+	
 }

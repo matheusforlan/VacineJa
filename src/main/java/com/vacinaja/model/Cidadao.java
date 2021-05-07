@@ -1,15 +1,9 @@
 package com.vacinaja.model;
 
-import java.math.BigDecimal;
 import java.sql.Date;
-import java.util.*;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
-
-
 
 @Entity
 public class Cidadao {
@@ -131,6 +125,8 @@ public class Cidadao {
         }
         this.comorbidades += comorbidade;
     }
+    
+    
 
 
 }
