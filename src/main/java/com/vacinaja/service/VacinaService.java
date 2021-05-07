@@ -6,6 +6,7 @@ import java.util.Optional;
 import com.vacinaja.DTO.VacinaDTO;
 import com.vacinaja.model.Vacina;
 
+
 public interface VacinaService {
 
     public Optional<Vacina> getVacinaById(Long id);

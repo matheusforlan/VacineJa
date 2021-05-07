@@ -1,5 +1,6 @@
 package com.vacinaja.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,18 +20,21 @@ public class FuncionarioServiceImpl implements FuncionarioService {
 	@Override
 	public void salvarFuncionario(Funcionario funcionario) {
 		funcionarioRepository.save(funcionario);
-		
 	}
 
 	@Override
 	public void cadastrarFuncionario(FuncionarioDTO funcionarioDTO) {
-		Funcionario funcionario = new Funcionario(funcionarioDTO.getCargo(), 
-				funcionarioDTO.getLocalDeTrabalho());
+		Funcionario funcionario = new Funcionario(funcionarioDTO);
 		funcionarioRepository.save(funcionario);
 	}
 
 	@Override
 	public Optional<Funcionario> getFuncionarioByCpf(String cpf) {		
 		return funcionarioRepository.findById(cpf);
+	}
+	
+	@Override
+	public List<Funcionario> listarFuncionariosNaoAprovados() {
+		return funcionarioRepository.findByIsAprovadoFalse();
 	}
 }

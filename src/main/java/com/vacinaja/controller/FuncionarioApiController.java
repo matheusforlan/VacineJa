@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import com.vacinaja.DTO.CidadaoDTO;
 import com.vacinaja.DTO.FuncionarioDTO;
 import com.vacinaja.model.Cidadao;
 import com.vacinaja.model.Funcionario;
@@ -26,9 +25,10 @@ import com.vacinaja.util.ErroFuncionario;
 @CrossOrigin
 public class FuncionarioApiController {
 	
-//	@Autowired
+	@Autowired
     FuncionarioService funcionarioService;
-    CidadaoService cidadaoService;
+	@Autowired
+	CidadaoService cidadaoService;
 	
 	// ------------------------------------------ cadastro de funcionário ------------------------------------------
     @RequestMapping(value = "/cadastro-funcionario", method = RequestMethod.POST)
@@ -40,15 +40,24 @@ public class FuncionarioApiController {
             return ErroCidadao.erroCidadaoNaoEncontrado(funcionarioDTO.getCpf());
         }
         
-        Optional<Funcionario> funcionario = funcionarioService.getFuncionarioByCpf(funcionarioDTO.getCpf());
+        Optional<Funcionario> optionalFuncionario = funcionarioService.getFuncionarioByCpf(funcionarioDTO.getCpf());
         
-        if(!funcionario.isPresent()){
+        if(optionalFuncionario.isPresent()) {
             return ErroFuncionario.erroFuncionarioJaCadastrado(funcionarioDTO.getCpf());
         }
         
-        // Precisa da autorização do administrador do sistema.
+        Cidadao cidadao = optionalCidadao.get();
         
-        funcionarioService.cadastrarFuncionario(funcionarioDTO);
+        //removendo o cidadao com mesmo id, pra n dar conflito
+        cidadaoService.removerCidadao(cidadao);
+        
+       
+        
+        //pra poder retornar o objeto certo, ja que ele n ta aprovado,
+        funcionarioDTO.setAprovado(false);
+        
+        // Precisa da autorização do administrador do sistema.
+        funcionarioService.cadastrarFuncionario(funcionarioDTO);   
 
         return new ResponseEntity<FuncionarioDTO>(funcionarioDTO, HttpStatus.OK);
     }
