@@ -38,7 +38,7 @@ public class VacinaServiceImpl implements VacinaService{
 
     @Override
     public Vacina cadastrarVacina(VacinaDTO vacinaDTO) {
-        Vacina vacina = new Vacina(vacinaDTO.getNome(), vacinaDTO.getFabricante(), vacinaDTO.getDiasParaSegundaDose());
+        Vacina vacina = new Vacina(vacinaDTO.getNome(), vacinaDTO.getFabricante(), vacinaDTO.getDiasParaSegundaDose(), vacinaDTO.getQuantidadeDoses());
 
         vacinaRepository.save(vacina);
 

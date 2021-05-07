@@ -33,7 +33,7 @@ public class VacinaApiController {
     public ResponseEntity<?> cadastrarVacina(@RequestBody VacinaDTO vacinaDTO, UriComponentsBuilder ucBuilder) {
         Optional<Vacina> vacina = vacinaService.getVacinaById(vacinaDTO.getId());
 
-        if (!vacina.isPresent()) {
+        if (vacina.isPresent()) {
             return ErroVacina.erroVacinaJaCadastrada(vacinaDTO.getId());
         }
 
@@ -81,7 +81,7 @@ public class VacinaApiController {
 
     // alterar a quantidade de dias para tomar a segunda dose, caso haja duas doses
     @RequestMapping(value = "/{id}/alterarDiasParaSegundaDose", method = RequestMethod.PUT)
-    public ResponseEntity<?> alterarDiasParaSegundaDose(@PathVariable("id") Long id, @RequestBody BigInteger diasParaSegundaDose) {
+    public ResponseEntity<?> alterarDiasParaSegundaDose(@PathVariable("id") Long id, @RequestBody int diasParaSegundaDose) {
         Optional<Vacina> optionalVacina = vacinaService.getVacinaById(id);
 
         if (!optionalVacina.isPresent()) {

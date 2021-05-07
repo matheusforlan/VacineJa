@@ -11,7 +11,9 @@ public class ErroVacina {
 
 	static final String NAO_FOI_POSSIVEL_ATUALIZAR_VACINA = "Não foi possível atualizar a situação desta vacina.";
 
-	static final String VACINA_JA_CADASTRADA = "Esta vacina já esta cadastrado";
+	static final String VACINA_JA_CADASTRADA = "Esta vacina já esta cadastrada";
+
+	static final String VACINA_NAO_TEM_2_DOSES = "A vacina de id %s não é de duas doses.";
     
 
 
@@ -32,6 +34,11 @@ public class ErroVacina {
 	
 	public static ResponseEntity<?> erroVacinaJaCadastrada(Long id) {
 		return new ResponseEntity<CustomErrorType>(new CustomErrorType(String.format(ErroVacina.VACINA_JA_CADASTRADA,
+				id)), HttpStatus.CONFLICT);
+	}
+
+	public static ResponseEntity<?> erroVacinaNaoTemDuasDoses(Long id) {
+		return new ResponseEntity<CustomErrorType>(new CustomErrorType(String.format(ErroVacina.VACINA_NAO_TEM_2_DOSES,
 				id)), HttpStatus.CONFLICT);
 	}
     
