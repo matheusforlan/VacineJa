@@ -47,18 +47,18 @@ public class CidadaoApiController {
 
     
     // ------------------------------------------ atualização de dados do cidadao ------------------------------------------
-    @RequestMapping(value = "/cidadao/{cpf}", method = RequestMethod.PUT)
-    public ResponseEntity<?> atualizarCidadao(@PathVariable("cpf") String cpf, @RequestBody CidadaoDTO cidadaoDTO) {
+    @RequestMapping(value = "/atualizar-cidadao", method = RequestMethod.PUT)
+    public ResponseEntity<?> atualizarCidadao(@RequestBody CidadaoDTO cidadaoDTO) {
 
-        Optional<Cidadao> optionalCidadao = cidadaoService.getCidadaoByCpf(cpf);
+        Optional<Cidadao> optionalCidadao = cidadaoService.getCidadaoByCpf(cidadaoDTO.getCpf());
 
         if (!optionalCidadao.isPresent()) {
-            return ErroCidadao.erroCidadaoNaoEncontrado(cpf);
+            return ErroCidadao.erroCidadaoNaoEncontrado(cidadaoDTO.getCpf());
         }
 
         Cidadao cidadao = optionalCidadao.get();
 
-        if (cidadao.getCpf().equals(cidadaoDTO.getCpf()) && cidadao.getSenha().equals(cidadaoDTO.getSenha())) {
+        if (cidadao.getSenha().equals(cidadaoDTO.getSenha())) {
             cidadaoService.atualizarCidadao(cidadaoDTO, cidadao);
             cidadaoService.salvarCidadao(cidadao);
         }
@@ -82,6 +82,7 @@ public class CidadaoApiController {
         return new ResponseEntity<Cidadao>(cidadao, HttpStatus.OK);
     }
 
+    // ------------------------------------------ agendamento de vacinação do cidadao ------------------------------------------
     @RequestMapping(value = "/{cpf}/agendar-vacinacao", method = RequestMethod.POST)
     public ResponseEntity<?> agendarVacinacao(@PathVariable("cpf") String cpf, @RequestBody AgendamentoVacinacaoDTO agendamentoVacinacaoDTO) {
         Optional<Cidadao> optionalCidadao = cidadaoService.getCidadaoByCpf(cpf);
