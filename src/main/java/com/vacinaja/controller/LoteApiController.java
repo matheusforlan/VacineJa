@@ -2,8 +2,11 @@ package com.vacinaja.controller;
 
 import com.vacinaja.DTO.LoteDTO;
 import com.vacinaja.model.Lote;
+import com.vacinaja.model.Vacina;
 import com.vacinaja.service.LoteService;
+import com.vacinaja.service.VacinaService;
 import com.vacinaja.util.ErroLote;
+import com.vacinaja.util.ErroVacina;
 import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,13 +28,22 @@ public class LoteApiController {
     @Autowired
     LoteService loteService;
 
+    @Autowired
+    VacinaService vacinaService;
+
     // ------------------------------------------ cadastro de lotes de vacina no sistema ------------------------------------------
     @RequestMapping(value = "/cadastro-lote", method = RequestMethod.POST)
     public ResponseEntity<?> cadastrarLote(@RequestBody LoteDTO loteDTO, UriComponentsBuilder ucBuilder) {
+        Optional<Vacina> optionalVacina = vacinaService.getVacinaById(loteDTO.getVacina().getId());
+
+        if (!optionalVacina.isPresent()) {
+            return ErroVacina.erroVacinaNaoEncontrada(loteDTO.getVacina().getId());
+        }
+        
         Optional<Lote> optionalLote = loteService.getLoteById(loteDTO.getId());
 
         if (optionalLote.isPresent()) {
-            return ErroLote.erroIdInvalido(loteDTO.getId());
+            return ErroLote.erroLoteJaCadastrado(loteDTO.getId());
         }
 
         loteService.cadastrarLote(loteDTO);

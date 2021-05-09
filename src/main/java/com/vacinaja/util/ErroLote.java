@@ -14,7 +14,7 @@ public class ErroLote {
         return new ResponseEntity<CustomErrorType>(new CustomErrorType(ErroLote.SEM_LOTES_CADASTRADOS), HttpStatus.NO_CONTENT);
     }
 
-    public static ResponseEntity<CustomErrorType> erroIdInvalido(Long id) {
+    public static ResponseEntity<CustomErrorType> erroLoteJaCadastrado(Long id) {
         return new ResponseEntity<CustomErrorType>(new CustomErrorType(String.format(ErroLote.ID_INVALIDO, id)), HttpStatus.CONFLICT);
     }
     
