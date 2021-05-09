@@ -14,7 +14,6 @@ public interface AgendamentoVacinacaoService {
 
     public void cadastrarAgendamentoVacinacao(AgendamentoVacinacaoDTO agendamentoVacinacaoDTO);
 
-    public void atualizarAgendamentoVacinacao(AgendamentoVacinacaoDTO agendamentoVacinacaoDTO, agendamentoVacinacao agendamentoVacinacao);
+    public void atualizarAgendamentoVacinacao(AgendamentoVacinacaoDTO agendamentoVacinacaoDTO, AgendamentoVacinacao agendamentoVacinacao);
 
-    
 }

@@ -24,8 +24,7 @@ static final String admin_NAO_CADASTRADO = "Administrador com cpf %s não está 
 	}
 
 	public static ResponseEntity<?> erroMudarSituacao(Admin admin) {
-		return new ResponseEntity<CustomErrorType>(new CustomErrorType(String.format(ErroAdmin.NAO_FOI_POSSIVEL_ATUALIZAR,
-				admin.getUser())), HttpStatus.NOT_MODIFIED);
+		return new ResponseEntity<CustomErrorType>(new CustomErrorType(String.format(ErroAdmin.NAO_FOI_POSSIVEL_ATUALIZAR)), HttpStatus.NOT_MODIFIED);
 	}
 	
 	public static ResponseEntity<?> ErroNenhumFuncionarioAAprovar() {
