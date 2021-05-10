@@ -1,8 +1,12 @@
 package com.vacinaja.model;
 
+import com.vacinaja.model.situacoes.*;
 import java.sql.Date;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.Id;
+
 
 
 
@@ -29,10 +33,11 @@ public class Cidadao {
 
     private String senha;
 
-    //private Situacao situacao;
+    @Enumerated(EnumType.STRING)
+    private EnumSituacoes situacao;
 
     Cidadao(){}
-
+    
     public Cidadao(String cpf, String nome, Date dataNasc, String cartaoSus, String telefone, String email, String profissao,
     String comorbidades, String senha){
         this.cpf = cpf;
@@ -44,7 +49,7 @@ public class Cidadao {
         this.profissao = profissao;
         this.comorbidades = comorbidades;
         this.senha = senha;
-        //this.situacao = new NaoHabilitado();
+        this.situacao = EnumSituacoes.NAO_HABILITADO;
     }
 
 
@@ -123,8 +128,26 @@ public class Cidadao {
         }
         this.comorbidades += comorbidade;
     }
-    
-    
+    public void setSituacao(EnumSituacoes situacao){
+        this.situacao = situacao;
+    }
 
+    public EnumSituacoes getSituacao(){
+        return this.situacao;
+    }
+    
+    
+    public String toString(){
+        String retorno = "";
+        retorno += "Nome: " + this.nome + "\n" + 
+        "CPF: " + this.cpf + "\n" +
+        "Cartão SUS: " + this.cartaoSus + "\n" +
+        "Data de Nascimento " + this.dataNasc + "\n" +
+        "Email: " + this.email + "\n" +
+        "Telefone: " + this.telefone + "\n\n" +
+        "Situação do cidadão: " + this.situacao.getSituacao().toString() + "\n\n"; 
+
+        return retorno;
+    }
 
 }
