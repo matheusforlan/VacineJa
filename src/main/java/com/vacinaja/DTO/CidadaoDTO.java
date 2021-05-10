@@ -115,6 +115,7 @@ public class CidadaoDTO {
         this.senha = senha;
     }
 
+    
 
 }
     

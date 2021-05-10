@@ -5,6 +5,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import com.vacinaja.model.situacoes.Situacao;
+
 
 @Entity
 public class Vacina {
@@ -66,5 +68,7 @@ public class Vacina {
     public String toString() {
         return this.id + " - " + this.nome + " - " + this.fabricante;
     }
+
+   
     
 }

@@ -6,6 +6,8 @@ import com.vacinaja.DTO.AplicacaoVacinaDTO;
 import com.vacinaja.model.AplicacaoVacina;
 import com.vacinaja.model.Cidadao;
 import com.vacinaja.model.Vacina;
+
+import com.vacinaja.model.situacoes.*;
 import com.vacinaja.repository.AplicacaoVacinaRespository;
 import com.vacinaja.service.*;
 import com.vacinaja.util.*;
@@ -47,33 +49,30 @@ public class AplicacaoVacinaApiController {
         if(!optionalVacina.isPresent()){
             return ErroVacina.erroVacinaNaoEncontrada(aplicacaoVacinaDTO.getIdVacina());
         }
+        Vacina vacina = optionalVacina.get();
 
-        //verificacao temporaria.
-        //Futuramente a verificacao acontecera verficando o estado do cidadao para a vacinacao 
-        if(optionalAplicacaoVacina.isPresent()){
+        Situacao situacao = cidadao.getSituacao().getSituacao();
+
+        
+        if(situacao instanceof NaoHabilitado){
+            return ErroAplicacao.erroCidadaoNaoHabilitadoParaVacina(aplicacaoVacinaDTO.getCpfCidadao());
+        }
+        if(situacao instanceof TomouDose1 || situacao instanceof HabilitadoDose2 || situacao instanceof VacinacaoFinalizada){
             return ErroAplicacao.erroCidadaoJaTomouDose1(aplicacaoVacinaDTO.getCpfCidadao());
         }
-
         /*
-        if(cidadao.naoHabilitadoParaVacina() ){
-            return ErroAplicacao.cidadaoNaoHabilitadoParaVacina(aplicacaoVacinaDTO.getCpfCidadao());
-        }
-        if(cidadao.esperandoDose2() || cidadao.habilitadoDose2() || cidadao.imunizado()){
-            return ErroAplicacao.cidadaoJaTomouDose1(aplicacaoVacinaDTO.getCpfCidadao());
-        }
         if(!loteService.possui(aplicacaoVacinaDTO.getVacinaId())){
             return ErroLote.vacinaIndisponivelNoMomento(aplicacaoVacinaDTO.getVacinaId());
         }    
         */
         
 
-        Vacina vacina = optionalVacina.get();
+        situacao.tomaVacina(cidadao, vacina);
 
-        //vacina.Aplicar(cidadao); esse metodo em vacina ira alterar o estado do cidadao de acordo com as regras especificas da vacina
         //loteService.usarDose(vacina.getId());
 
-        //cidadaoService.salvar(cidadao);
-        
+        cidadaoService.salvarCidadao(cidadao);
+
 
         AplicacaoVacina aplicacaoVacina = new AplicacaoVacina(cidadao, vacina, aplicacaoVacinaDTO.getDataAplicacao());
 
@@ -90,23 +89,37 @@ public class AplicacaoVacinaApiController {
             return ErroCidadao.erroCidadaoNaoEncontrado(aplicacaoVacinaDTO.getCpfCidadao());
         }
         Cidadao cidadao = optionalCidadao.get();
-        Optional<AplicacaoVacina> optionalAplicacaVacina = aplicacaoVacinaService.getById(aplicacaoVacinaDTO.getCpfCidadao());
-        if(!optionalAplicacaVacina.isPresent()){
+
+        Situacao situacao = cidadao.getSituacao().getSituacao();
+
+        if(situacao instanceof NaoHabilitado){
+            return ErroAplicacao.erroCidadaoNaoHabilitadoParaVacina(aplicacaoVacinaDTO.getCpfCidadao());
+        }
+        if(situacao instanceof VacinacaoFinalizada){
+            return ErroAplicacao.erroCidadaoJaFinalizouVacinacao(aplicacaoVacinaDTO.getCpfCidadao());
+        }
+
+        Optional<AplicacaoVacina> optionalAplicacaoVacina = aplicacaoVacinaService.getById(aplicacaoVacinaDTO.getCpfCidadao());
+        if(!optionalAplicacaoVacina.isPresent()){
             return ErroAplicacao.erroCidadaoNaoTomouDose1(aplicacaoVacinaDTO.getCpfCidadao());
         }
-        AplicacaoVacina aplicacao = optionalAplicacaVacina.get();
+        
+        AplicacaoVacina aplicacao = optionalAplicacaoVacina.get();
+        
         if(aplicacao.getVacina().getId() != aplicacaoVacinaDTO.getIdVacina()){
             return ErroAplicacao.erroVacinaInconsistente(aplicacaoVacinaDTO.getIdVacina());
         }
-        if(aplicacao.getVacina().getQuantidadeDoses() == 1){
-            return ErroVacina.erroVacinaNaoTemDuasDoses(aplicacaoVacinaDTO.getIdVacina());
-        }
+
+
+        situacao.tomaVacina(cidadao, aplicacao.getVacina());
+
+        cidadaoService.salvarCidadao(cidadao);
 
         aplicacao.tomouDose2();
+
         aplicacaoVacinaService.salvar(aplicacao);
 
-        return new ResponseEntity<AplicacaoVacina>(aplicacao, HttpStatus.ACCEPTED);
-        
+        return new ResponseEntity<AplicacaoVacina>(aplicacao, HttpStatus.ACCEPTED);   
     }
     
 }

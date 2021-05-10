@@ -9,6 +9,11 @@ public class AplicacaoVacinaDTO {
 
     public Date dataAplicacao;
 
+    public AplicacaoVacinaDTO(String cpfCidadao, long idVacina, Date dataAplicacao){
+        this.cpfCidadao = cpfCidadao;
+        this.idVacina = idVacina;
+        this.dataAplicacao = dataAplicacao;
+    }
 
     public String getCpfCidadao() {
         return this.cpfCidadao;
