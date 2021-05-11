@@ -23,12 +23,12 @@ static final String admin_NAO_CADASTRADO = "Administrador com cpf %s não está 
 				HttpStatus.NOT_FOUND);
 	}
 
-	public static ResponseEntity<?> erroMudarSituacao(Admin admin) {
+	public static ResponseEntity<CustomErrorType> erroMudarSituacao(Admin admin) {
 		return new ResponseEntity<CustomErrorType>(new CustomErrorType(String.format(ErroAdmin.NAO_FOI_POSSIVEL_ATUALIZAR)), HttpStatus.NOT_MODIFIED);
 	}
 	
-	public static ResponseEntity<?> ErroNenhumFuncionarioAAprovar() {
-		return new ResponseEntity<CustomErrorType>(new CustomErrorType(ErroAdmin.NENHUM_FUNCIONARIO_A_APROVAR)
-				, HttpStatus.NO_CONTENT);
+	public static ResponseEntity<CustomErrorType> ErroNenhumFuncionarioAAprovar() {
+		return new ResponseEntity<CustomErrorType>(new CustomErrorType(ErroAdmin.NENHUM_FUNCIONARIO_A_APROVAR),
+				HttpStatus.NOT_FOUND);
 	}
 }
