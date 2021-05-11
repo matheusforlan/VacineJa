@@ -52,9 +52,9 @@ public class Lote {
     @Override
     public String toString() {
         return "Lote - " + this.id + "\n" +
-        "{Vacina - " + this.vacina.toString() + "\n" +
-        "Quantidade de doses do lote - " + this.quantidadeDoses + "\n" +
-        "Data de validade - " + this.dataValidade.toString() + "}\n";
+        "{Vacina - " + this.vacina.getNome() + "\n" +
+        " Quantidade de doses do lote - " + this.quantidadeDoses + "\n" +
+        " Data de validade - " + this.dataValidade.toString() + "}\n";
 
     }
 }

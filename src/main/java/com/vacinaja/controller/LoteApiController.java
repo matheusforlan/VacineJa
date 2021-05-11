@@ -39,11 +39,18 @@ public class LoteApiController {
         if (!optionalVacina.isPresent()) {
             return ErroVacina.erroVacinaNaoEncontrada(loteDTO.getVacina().getId());
         }
+
+        Vacina vacina = optionalVacina.get();
         
         Optional<Lote> optionalLote = loteService.getLoteById(loteDTO.getId());
 
         if (optionalLote.isPresent()) {
             return ErroLote.erroLoteJaCadastrado(loteDTO.getId());
+        }
+
+        if (!vacina.isDisponivel() && loteDTO.getQuantidadeDoses()>0) {
+            vacina.tornaDisponivel();
+            vacinaService.salvarVacina(vacina);
         }
 
         loteService.cadastrarLote(loteDTO);
