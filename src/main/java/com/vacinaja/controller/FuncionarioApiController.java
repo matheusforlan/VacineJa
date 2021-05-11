@@ -119,7 +119,35 @@ public class FuncionarioApiController {
         }
         return new ResponseEntity<List<Cidadao>>(cidadaos, HttpStatus.OK);
     }
+    // ------------------------Habilitar Pessoas que possuem alguma comorbidade X ----------------------------------
+    @RequestMapping(value = "/habilitar-comorbidade/{comorbidade}", method = RequestMethod.GET)
+    public ResponseEntity<?> habilitarCidadaosComComorbidade(@RequestParam String comorbidade){
+        List<Cidadao> cidadaos = geraCidadaosNaoHabilitadosComComorbidade(comorbidade);
+        if(cidadaos.isEmpty()) {
+            return new ResponseEntity<String>("Não foi possível encontrar cidadãos com essa comorbidade na base de dados.", HttpStatus.NOT_FOUND);
+        }
+        for(Cidadao cidadao : cidadaos){
+            cidadao.getSituacao().getSituacao().mudaSituacao(cidadao);
+            cidadaoService.salvarCidadao(cidadao);
+        }
+        return new ResponseEntity<List<Cidadao>>(cidadaos, HttpStatus.OK);
 
+    }
+    // ------------------------Habilitar Pessoas que possuem alguma Profissoa X ----------------------------------
+    @RequestMapping(value = "/habilitar-profissao/{profissao}", method = RequestMethod.GET)
+    public ResponseEntity<?> habilitarCidadaosComProfissao(@RequestParam String profissao){
+        List<Cidadao> cidadaos = geraCidadaosNaoHabilitadosComProfissao(profissao);
+        if(cidadaos.isEmpty()) {
+            return new ResponseEntity<String>("Não foi possível encontrar cidadãos com essa profissão na base de dados.", HttpStatus.NOT_FOUND);
+    
+        }
+        for(Cidadao cidadao : cidadaos){
+            cidadao.getSituacao().getSituacao().mudaSituacao(cidadao);
+            cidadaoService.salvarCidadao(cidadao);
+        }
+        
+        return new ResponseEntity<List<Cidadao>>(cidadaos, HttpStatus.OK);
+    }
 
 
 
