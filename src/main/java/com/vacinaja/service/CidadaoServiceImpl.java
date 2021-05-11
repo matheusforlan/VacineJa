@@ -2,7 +2,10 @@ package com.vacinaja.service;
 
 import com.vacinaja.DTO.CidadaoDTO;
 import com.vacinaja.model.Cidadao;
+import com.vacinaja.model.situacoes.EnumSituacoes;
 import com.vacinaja.repository.CidadaoRepository;
+
+import java.util.List;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -49,6 +52,12 @@ public class CidadaoServiceImpl implements CidadaoService{
         cidadao.setEmail(cidadaoDTO.getEmail());
         cidadao.setProfissao(cidadaoDTO.getProfissao());
         cidadao.setComorbidades(cidadaoDTO.getComorbidades());
+    }
+
+    @Override
+    public List<Cidadao> getCidadaosBySituacao(EnumSituacoes situacao) {
+        return cidadaoRepository.findBySituacao(situacao);
+        
     }
 
 }

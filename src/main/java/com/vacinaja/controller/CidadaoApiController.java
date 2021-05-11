@@ -15,8 +15,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import io.micrometer.core.ipc.http.HttpSender.Response;
 
 
 
@@ -108,6 +111,17 @@ public class CidadaoApiController {
         */
 
         return new ResponseEntity<AgendamentoVacinacaoDTO>(agendamentoVacinacaoDTO, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/{cpf}/ver-situacao", method = RequestMethod.GET)
+    public ResponseEntity<?> verSituacaoCidadao(@RequestParam String cpf){
+        Optional<Cidadao> optionalCidadao = cidadaoService.getCidadaoByCpf(cpf);
+
+        if(!optionalCidadao.isPresent()){
+            return ErroCidadao.erroCidadaoNaoEncontrado(cpf);
+        }
+        Cidadao cidadao = optionalCidadao.get();
+        return new ResponseEntity<String>(cidadao.toString(), HttpStatus.OK);
     }
 
 }
