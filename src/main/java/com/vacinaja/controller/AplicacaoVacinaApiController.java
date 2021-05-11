@@ -1,17 +1,13 @@
 package com.vacinaja.controller;
 
-import java.util.Optional;
-
 import com.vacinaja.DTO.AplicacaoVacinaDTO;
 import com.vacinaja.model.AplicacaoVacina;
 import com.vacinaja.model.Cidadao;
 import com.vacinaja.model.Vacina;
-
 import com.vacinaja.model.situacoes.*;
-import com.vacinaja.repository.AplicacaoVacinaRespository;
 import com.vacinaja.service.*;
 import com.vacinaja.util.*;
-
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +16,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
+
+
+
 
 @RestController
 @RequestMapping("/api")
@@ -33,6 +32,9 @@ public class AplicacaoVacinaApiController {
 
     @Autowired
     CidadaoService cidadaoService;
+
+    @Autowired
+    LoteService loteService;
 
     //---------------------------------Cadastro de aplicacao da primeira dose da vacina ------------------------------------
     @RequestMapping(value = "/vacinacao/registrar-aplicacao-dose-1", method = RequestMethod.POST)
@@ -60,16 +62,19 @@ public class AplicacaoVacinaApiController {
         if(situacao instanceof TomouDose1 || situacao instanceof HabilitadoDose2 || situacao instanceof VacinacaoFinalizada){
             return ErroAplicacao.erroCidadaoJaTomouDose1(aplicacaoVacinaDTO.getCpfCidadao());
         }
-        /*
-        if(!loteService.possui(aplicacaoVacinaDTO.getVacinaId())){
-            return ErroLote.vacinaIndisponivelNoMomento(aplicacaoVacinaDTO.getVacinaId());
-        }    
-        */
+
+        if (!loteService.isVacinaDisponivel(aplicacaoVacinaDTO.getIdVacina())) {
+            return ErroAplicacao.erroVacinaIndisponivel(aplicacaoVacinaDTO.getIdVacina());
+        }
         
 
         situacao.tomaVacina(cidadao, vacina);
 
-        //loteService.usarDose(vacina.getId());
+        loteService.tomarDose(vacina.getId());
+
+        if (!loteService.isVacinaDisponivel(vacina.getId())) {
+            vacina.tornaIndisponivel();
+        }
 
         cidadaoService.salvarCidadao(cidadao);
 
@@ -110,8 +115,18 @@ public class AplicacaoVacinaApiController {
             return ErroAplicacao.erroVacinaInconsistente(aplicacaoVacinaDTO.getIdVacina());
         }
 
+        if (!loteService.isVacinaDisponivel(aplicacaoVacinaDTO.getIdVacina())) {
+            return ErroAplicacao.erroVacinaIndisponivel(aplicacaoVacinaDTO.getIdVacina());
+        }
+
 
         situacao.tomaVacina(cidadao, aplicacao.getVacina());
+
+        loteService.tomarDose(aplicacao.getVacina().getId());
+
+        if (!loteService.isVacinaDisponivel(aplicacao.getVacina().getId())) {
+            aplicacao.getVacina().tornaIndisponivel();
+        }
 
         cidadaoService.salvarCidadao(cidadao);
 
