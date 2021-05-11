@@ -55,6 +55,5 @@ public class AdminApiController {
 		funcionarioService.salvarFuncionario(funcionario);
 		
 		return new ResponseEntity<Funcionario>(funcionario, HttpStatus.OK);
-		
 	}
 }
