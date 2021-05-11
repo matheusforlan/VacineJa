@@ -1,11 +1,8 @@
 package com.vacinaja.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.time.Period;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,12 +18,17 @@ import org.springframework.web.util.UriComponentsBuilder;
 import com.vacinaja.DTO.FuncionarioDTO;
 import com.vacinaja.model.Cidadao;
 import com.vacinaja.model.Funcionario;
+import com.vacinaja.model.Lote;
+import com.vacinaja.model.Vacina;
 import com.vacinaja.model.situacoes.EnumSituacoes;
 import com.vacinaja.service.CidadaoService;
-import com.vacinaja.service.CidadaoServiceImpl;
 import com.vacinaja.service.FuncionarioService;
+import com.vacinaja.service.LoteService;
+import com.vacinaja.service.VacinaService;
 import com.vacinaja.util.ErroCidadao;
 import com.vacinaja.util.ErroFuncionario;
+import com.vacinaja.util.ErroLote;
+import com.vacinaja.util.ErroVacina;
 import com.vacinaja.util.MetodosAuxiliares;
 
 @RestController
@@ -38,6 +40,10 @@ public class FuncionarioApiController {
     FuncionarioService funcionarioService;
 	@Autowired
 	CidadaoService cidadaoService;
+    @Autowired
+    VacinaService vacinaService;
+    @Autowired
+    LoteService loteService;
 	
 	// ------------------------------------------ cadastro de funcionário ------------------------------------------
     @RequestMapping(value = "/cadastro-funcionario", method = RequestMethod.POST)
@@ -107,7 +113,7 @@ public class FuncionarioApiController {
         return new ResponseEntity<List<Cidadao>>(cidadaos, HttpStatus.OK);
     }
     // ---------------------------Ativar idade minima -----------------------------------------------------------------------
-    @RequestMapping(value = "/habilitar-idade/{idade}", method = RequestMethod.GET)
+    @RequestMapping(value = "/habilitar-idade/{idade}", method = RequestMethod.PUT)
     public ResponseEntity<?> habilitarCidadaosComIdadeMinima(@RequestParam int idade){
         List<Cidadao> cidadaos = geraCidadaosNaoHabilitadosComIdadeMinima(idade);
         if(cidadaos.isEmpty()) {
@@ -120,7 +126,7 @@ public class FuncionarioApiController {
         return new ResponseEntity<List<Cidadao>>(cidadaos, HttpStatus.OK);
     }
     // ------------------------Habilitar Pessoas que possuem alguma comorbidade X ----------------------------------
-    @RequestMapping(value = "/habilitar-comorbidade/{comorbidade}", method = RequestMethod.GET)
+    @RequestMapping(value = "/habilitar-comorbidade/{comorbidade}", method = RequestMethod.PUT)
     public ResponseEntity<?> habilitarCidadaosComComorbidade(@RequestParam String comorbidade){
         List<Cidadao> cidadaos = geraCidadaosNaoHabilitadosComComorbidade(comorbidade);
         if(cidadaos.isEmpty()) {
@@ -134,7 +140,7 @@ public class FuncionarioApiController {
 
     }
     // ------------------------Habilitar Pessoas que possuem alguma Profissoa X ----------------------------------
-    @RequestMapping(value = "/habilitar-profissao/{profissao}", method = RequestMethod.GET)
+    @RequestMapping(value = "/habilitar-profissao/{profissao}", method = RequestMethod.PUT)
     public ResponseEntity<?> habilitarCidadaosComProfissao(@RequestParam String profissao){
         List<Cidadao> cidadaos = geraCidadaosNaoHabilitadosComProfissao(profissao);
         if(cidadaos.isEmpty()) {
@@ -147,58 +153,88 @@ public class FuncionarioApiController {
         }
         
         return new ResponseEntity<List<Cidadao>>(cidadaos, HttpStatus.OK);
+    
+
+
     }
 
 
+    // ------------------------------------------ metodo para listar vacinas com lotes disponiveis ------------------------------------------
+    @RequestMapping(value = "/listar-vacinas-disponiveis", method = RequestMethod.GET)
+    public ResponseEntity<?> listarVacinasDisponiveis() {
+        List<Vacina> vacinas = vacinaService.listarVacinas();
 
+        if (vacinas.isEmpty()) {
+            return ErroVacina.erroSemVacinasCadastradas();
+        }
 
+        List<Lote> lotes = loteService.listarLotes();
 
+        if (lotes.isEmpty()) {
+            return ErroLote.erroSemLotesCadastrados();
+        }
 
+        String vacinasDisponiveis = "";
 
+        for (Vacina vacina : vacinas) {
 
+            String retornoVacina = vacina.toString();
 
+            for (Lote lote : lotes) {
 
+                if (lote.getVacina().equals(vacina)) {
+                    retornoVacina += "\n * " + lote.toString() + "\n";
+                }
+            }
 
-
-
-
-
-
-
-
-
-
-    //--------------------------------------Métodos auxiliares especificos -------------------------------------------------------
-
-    private List<Cidadao> geraCidadaosNaoHabilitadosComComorbidade(String comorbidade) {
-        List<Cidadao> cidadaos = cidadaoService.getCidadaosBySituacao(EnumSituacoes.NAO_HABILITADO);
-        for(Cidadao cidadao : cidadaos){
-            if(!cidadao.getComorbidades().contains(comorbidade)){
-                cidadaos.remove(cidadao);
+            if (!retornoVacina.equals(vacina.toString())) {
+                vacinasDisponiveis += retornoVacina;
             }
         }
-        return cidadaos;
+
+        if (vacinasDisponiveis.equals("")) {
+            vacinasDisponiveis = "Não há vacinas disponíveis no momento...";
+        }
+
+        return new ResponseEntity<String>(vacinasDisponiveis, HttpStatus.OK);
+    }
+     //--------------------------------------Métodos auxiliares especificos -------------------------------------------------------
+
+     private List<Cidadao> geraCidadaosNaoHabilitadosComComorbidade(String comorbidade) {
+        List<Cidadao> cidadaos = cidadaoService.getCidadaosBySituacao(EnumSituacoes.NAO_HABILITADO);
+        
+        List<Cidadao> aux = new ArrayList<Cidadao>();
+        for(Cidadao cidadao : cidadaos){
+            if(cidadao.getComorbidades().contains(comorbidade)){
+                aux.add(cidadao);
+            }
+        }
+        return aux;
     }
     private List<Cidadao> geraCidadaosNaoHabilitadosComProfissao(String profissao){
         List<Cidadao> cidadaos = cidadaoService.getCidadaosBySituacao(EnumSituacoes.NAO_HABILITADO);
+        
+        List<Cidadao> aux = new ArrayList<Cidadao>();
         for(Cidadao cidadao : cidadaos){
-            if(!cidadao.getProfissao().equals(profissao)){
-                cidadaos.remove(cidadao);
+            if(cidadao.getComorbidades().contains(profissao)){
+                aux.add(cidadao);
             }
         }
-        return cidadaos;
+        return aux;
     }
 
     private List<Cidadao> geraCidadaosNaoHabilitadosComIdadeMinima(int idade) {
         List<Cidadao> cidadaos = cidadaoService.getCidadaosBySituacao(EnumSituacoes.NAO_HABILITADO);
+        
+        List<Cidadao> aux = new ArrayList<Cidadao>();
+
         for(Cidadao cidadao : cidadaos){
-            if(MetodosAuxiliares.calculaIdade(cidadao.getDataNasc()) < idade){
-                cidadaos.remove(cidadao);
+            if(MetodosAuxiliares.calculaIdade(cidadao.getDataNasc()) >= idade){
+                aux.add(cidadao);
             }
         }
-        return cidadaos;
+        return aux;
     }
-
 
 }
 

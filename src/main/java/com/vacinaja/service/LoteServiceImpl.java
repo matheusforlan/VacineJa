@@ -42,4 +42,50 @@ public class LoteServiceImpl implements LoteService{
 
         return lote;
     }
+
+    @Override
+    public boolean isVacinaDisponivel(long vacinaId) {
+        List<Lote> lotes = loteRepository.findByVacinaId(vacinaId);
+        return !lotes.isEmpty();
+        
+        /*
+        boolean result = false;
+
+        List<Lote> lotes = loteRepository.findAll();
+
+        if (lotes.isEmpty()) {
+            return result;
+        }
+
+        for (Lote lote : lotes) {
+            if (lote.getVacina().getId()==vacinaId) {
+                result = true;
+                break;
+            }
+        }
+
+        return result;
+    */
+    }
+
+    @Override
+    public void tomarDose(long vacinaId) {
+        List<Lote> lotes = loteRepository.findAll();
+
+        for (Lote lote : lotes) {
+            if (lote.getVacina().getId()==vacinaId) {
+                int quantidadeDeDoses = lote.getQuantidadeDoses()-1;
+
+                lote.setQuantidadeDoses(quantidadeDeDoses);
+
+                if (lote.getQuantidadeDoses()==0) {
+                    loteRepository.delete(lote);
+                } else {
+                    loteRepository.save(lote);
+                }
+
+                break;
+            }
+        }
+    }
 }

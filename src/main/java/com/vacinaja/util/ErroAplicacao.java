@@ -14,6 +14,8 @@ public class ErroAplicacao {
 
 	static final String CIDADAO_JA_FINALIZOU_VACINACAO = "O cidadão com cpf %s já finalizou sua vacinação..";
 
+	static final String VACINA_INDISPONIVEL = "Esta vacina não possui doses disponíveis no momento.";
+
 
     public static ResponseEntity<CustomErrorType> erroCidadaoJaTomouDose1(String cpf) {
 		return new ResponseEntity<CustomErrorType>(new CustomErrorType(String.format(ErroAplicacao.CIDADAO_JA_TOMOU_DOSE1, cpf)),
@@ -38,5 +40,10 @@ public class ErroAplicacao {
 	public static ResponseEntity<?> erroCidadaoJaFinalizouVacinacao(String cpf){
 		return new ResponseEntity<CustomErrorType> (new CustomErrorType(String.format(ErroAplicacao.CIDADAO_JA_FINALIZOU_VACINACAO, cpf)), 
 		HttpStatus.CONFLICT);
+	}
+
+	public static ResponseEntity<?> erroVacinaIndisponivel(Long vacinaId){
+		return new ResponseEntity<CustomErrorType>(new CustomErrorType(String.format(ErroAplicacao.VACINA_INDISPONIVEL, vacinaId)), 
+		HttpStatus.NOT_FOUND);
 	}
 }
