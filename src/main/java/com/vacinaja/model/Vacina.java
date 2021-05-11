@@ -5,7 +5,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-import com.vacinaja.model.situacoes.Situacao;
 
 
 @Entity
@@ -23,6 +22,8 @@ public class Vacina {
 
     private int quantidadeDoses;
 
+    private boolean isDisponivel;
+
     Vacina(){}
 
     public Vacina(String nome, String fabricante, int diasParaSegundaDose, int quantidadeDoses) {
@@ -30,6 +31,7 @@ public class Vacina {
         this.fabricante = fabricante;
         this.diasParaSegundaDose = diasParaSegundaDose;
         this.quantidadeDoses = quantidadeDoses;
+        this.isDisponivel = false;
     }
 
     public Long getId() {
@@ -64,9 +66,23 @@ public class Vacina {
         return this.quantidadeDoses;
     }
 
+    public boolean isDisponivel() {
+        return this.isDisponivel;
+    }
+
+    public void tornaDisponivel() {
+        this.isDisponivel = true;
+    }
+
+    public void tornaIndisponivel() {
+        this.isDisponivel = false;
+    }
+
     @Override
     public String toString() {
-        return this.id + " - " + this.nome + " - " + this.fabricante;
+        return "Vacina " + this.id + " - " + this.nome + "\n" +
+        "Fabricante - " + this.fabricante + "\n" +
+        "Quantidade de Doses - " + this.quantidadeDoses;
     }
 
    

@@ -16,5 +16,9 @@ public interface LoteService {
     public List<Lote> listarLotes();
 
     public Lote cadastrarLote(LoteDTO loteDTO);
+
+    public boolean isVacinaDisponivel(long vacinaId);
+
+    public void tomarDose(long vacinaId);
     
 }
