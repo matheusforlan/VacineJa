@@ -51,10 +51,26 @@ public class CidadaoServiceImpl implements CidadaoService{
         cidadao.setComorbidades(cidadaoDTO.getComorbidades());
     }
 
+	@Override
+	public boolean validarUsuarioSenha(Cidadao cidadao) {
+		Optional<Cidadao> optionalCidadao = getCidadaoByCpf(cidadao.getCpf());
+		
+		if (!optionalCidadao.isPresent()) {
+			return false;
+		}
+		
+		
+		
+		Cidadao cidadaoBD = optionalCidadao.get();
+		return cidadaoBD.getSenha().equals(cidadao.getSenha());
+
+	}
+	
+	
+
 }
     
 
   
 
     
-

@@ -16,6 +16,8 @@ public class FuncionarioServiceImpl implements FuncionarioService {
 	
 	@Autowired
 	FuncionarioRepository funcionarioRepository;
+	
+	private JwtService jwtService;
 
 	@Override
 	public void salvarFuncionario(Funcionario funcionario) {
@@ -37,4 +39,5 @@ public class FuncionarioServiceImpl implements FuncionarioService {
 	public List<Funcionario> listarFuncionariosNaoAprovados() {
 		return funcionarioRepository.findByIsAprovadoFalse();
 	}
+
 }

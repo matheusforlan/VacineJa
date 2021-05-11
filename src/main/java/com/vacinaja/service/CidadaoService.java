@@ -16,5 +16,7 @@ public interface CidadaoService {
     public void cadastrarCidadao(CidadaoDTO cidadaoDTO);
 
     public void atualizarCidadao(CidadaoDTO cidadaoDTO, Cidadao cidadao);
+
+	public boolean validarUsuarioSenha(Cidadao cidadao);
     
 }

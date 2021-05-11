@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -48,7 +49,8 @@ public class CidadaoApiController {
     
     // ------------------------------------------ atualização de dados do cidadao ------------------------------------------
     @RequestMapping(value = "/atualizar-cidadao", method = RequestMethod.PUT)
-    public ResponseEntity<?> atualizarCidadao(@RequestBody CidadaoDTO cidadaoDTO) {
+    public ResponseEntity<?> atualizarCidadao(@RequestBody CidadaoDTO cidadaoDTO, 
+    		@RequestHeader ("Authorization") String header) {
 
         Optional<Cidadao> optionalCidadao = cidadaoService.getCidadaoByCpf(cidadaoDTO.getCpf());
 
@@ -68,7 +70,8 @@ public class CidadaoApiController {
 
     //adicionar comorbidades do cidadao
     @RequestMapping(value = "/{cpf}/adicionarComorbidades", method = RequestMethod.PUT)
-    public ResponseEntity<?> adicionarComorbidade(@PathVariable("cpf") String cpf, @RequestBody String comorbidades){
+    public ResponseEntity<?> adicionarComorbidade(@PathVariable("cpf") String cpf, @RequestBody String comorbidades,
+    		@RequestHeader("Authorization") String header){
         Optional<Cidadao> optionalCidadao = cidadaoService.getCidadaoByCpf(cpf);
         
         if(!optionalCidadao.isPresent()){
@@ -84,7 +87,8 @@ public class CidadaoApiController {
 
     // ------------------------------------------ agendamento de vacinação do cidadao ------------------------------------------
     @RequestMapping(value = "/{cpf}/agendar-vacinacao", method = RequestMethod.POST)
-    public ResponseEntity<?> agendarVacinacao(@PathVariable("cpf") String cpf, @RequestBody AgendamentoVacinacaoDTO agendamentoVacinacaoDTO) {
+    public ResponseEntity<?> agendarVacinacao(@PathVariable("cpf") String cpf, @RequestBody AgendamentoVacinacaoDTO agendamentoVacinacaoDTO,
+    		@RequestHeader ("Authorization") String header) {
         Optional<Cidadao> optionalCidadao = cidadaoService.getCidadaoByCpf(cpf);
 
         if (!optionalCidadao.isPresent()) {
