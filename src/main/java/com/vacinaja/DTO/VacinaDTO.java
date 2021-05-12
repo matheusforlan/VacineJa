@@ -1,7 +1,5 @@
 package com.vacinaja.DTO;
 
-import java.math.BigInteger;
-
 public class VacinaDTO {
 
     private Long id;

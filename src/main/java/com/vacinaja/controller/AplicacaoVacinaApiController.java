@@ -39,7 +39,7 @@ public class AplicacaoVacinaApiController {
     //---------------------------------Cadastro de aplicacao da primeira dose da vacina ------------------------------------
     @RequestMapping(value = "/vacinacao/registrar-aplicacao-dose-1", method = RequestMethod.POST)
     public ResponseEntity<?> cadastrarAplicacaoDose1(@RequestBody AplicacaoVacinaDTO aplicacaoVacinaDTO){
-        Optional<AplicacaoVacina> optionalAplicacaoVacina = aplicacaoVacinaService.getById(aplicacaoVacinaDTO.getCpfCidadao());
+        //<AplicacaoVacina> optionalAplicacaoVacina = aplicacaoVacinaService.getById(aplicacaoVacinaDTO.getCpfCidadao());
         Optional<Vacina> optionalVacina = vacinaService.getVacinaById(aplicacaoVacinaDTO.getIdVacina());
         Optional<Cidadao> optionalCidadao = cidadaoService.getCidadaoByCpf(aplicacaoVacinaDTO.getCpfCidadao());
         if(!optionalCidadao.isPresent()){
