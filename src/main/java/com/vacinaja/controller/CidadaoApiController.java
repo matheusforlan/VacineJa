@@ -19,8 +19,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
+
+import io.micrometer.core.ipc.http.HttpSender.Response;
 
 
 
@@ -55,7 +58,7 @@ public class CidadaoApiController {
     public ResponseEntity<?> atualizarCidadao(@RequestBody CidadaoDTO cidadaoDTO, 
     		@RequestHeader ("Authorization") String header) throws ServletException {
     	
-    	if(!cidadaoService.validarRequisicao(header)) {
+    	if(!cidadaoService.validarRequisicao(header, cidadaoDTO.getCpf())) {
     		return ErroCidadao.SemPermissao();
     	}
     	
@@ -66,6 +69,8 @@ public class CidadaoApiController {
         }
 
         Cidadao cidadao = optionalCidadao.get();
+        
+       
 
         if (cidadao.getSenha().equals(cidadaoDTO.getSenha())) {
             cidadaoService.atualizarCidadao(cidadaoDTO, cidadao);
@@ -78,8 +83,13 @@ public class CidadaoApiController {
     //adicionar comorbidades do cidadao
     @RequestMapping(value = "/{cpf}/adicionarComorbidades", method = RequestMethod.PUT)
     public ResponseEntity<?> adicionarComorbidade(@PathVariable("cpf") String cpf, @RequestBody String comorbidades,
-    		@RequestHeader("Authorization") String header){
-        Optional<Cidadao> optionalCidadao = cidadaoService.getCidadaoByCpf(cpf);
+    		@RequestHeader("Authorization") String header) throws ServletException{
+       
+    	if(!cidadaoService.validarRequisicao(header, cpf)) {
+    		return ErroCidadao.SemPermissao();
+    	}
+    	
+    	Optional<Cidadao> optionalCidadao = cidadaoService.getCidadaoByCpf(cpf);
         
         if(!optionalCidadao.isPresent()){
             return ErroCidadao.erroCidadaoNaoEncontrado(cpf);
@@ -95,8 +105,13 @@ public class CidadaoApiController {
     // ------------------------------------------ agendamento de vacinação do cidadao ------------------------------------------
     @RequestMapping(value = "/{cpf}/agendar-vacinacao", method = RequestMethod.POST)
     public ResponseEntity<?> agendarVacinacao(@PathVariable("cpf") String cpf, @RequestBody AgendamentoVacinacaoDTO agendamentoVacinacaoDTO,
-    		@RequestHeader ("Authorization") String header) {
-        Optional<Cidadao> optionalCidadao = cidadaoService.getCidadaoByCpf(cpf);
+    		@RequestHeader ("Authorization") String header) throws ServletException {
+    	
+    	if(!cidadaoService.validarRequisicao(header, cpf)) {
+    		return ErroCidadao.SemPermissao();
+    	}
+    	
+    	Optional<Cidadao> optionalCidadao = cidadaoService.getCidadaoByCpf(cpf);
 
         if (!optionalCidadao.isPresent()) {
             return ErroCidadao.erroCidadaoNaoEncontrado(cpf);
@@ -119,6 +134,23 @@ public class CidadaoApiController {
         */
 
         return new ResponseEntity<AgendamentoVacinacaoDTO>(agendamentoVacinacaoDTO, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/{cpf}/ver-situacao", method = RequestMethod.GET)
+    public ResponseEntity<?> verSituacaoCidadao(@RequestParam String cpf,
+    		@RequestHeader ("Authorization") String header) throws ServletException{
+        
+    	if(!cidadaoService.validarRequisicao(header, cpf)) {
+    		return ErroCidadao.SemPermissao();
+    	}
+    	
+    	Optional<Cidadao> optionalCidadao = cidadaoService.getCidadaoByCpf(cpf);
+
+        if(!optionalCidadao.isPresent()){
+            return ErroCidadao.erroCidadaoNaoEncontrado(cpf);
+        }
+        Cidadao cidadao = optionalCidadao.get();
+        return new ResponseEntity<String>(cidadao.toString(), HttpStatus.OK);
     }
 
 }

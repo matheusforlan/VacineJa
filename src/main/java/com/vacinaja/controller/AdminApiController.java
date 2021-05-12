@@ -75,7 +75,6 @@ public class AdminApiController {
 		funcionarioService.salvarFuncionario(funcionario);
 		
 		return new ResponseEntity<Funcionario>(funcionario, HttpStatus.OK);
-		
 	}
 	@RequestMapping(value = "/remover-funcionario",method = RequestMethod.DELETE)
 	public ResponseEntity<?> removerFuncionario(@RequestBody String cpf) {

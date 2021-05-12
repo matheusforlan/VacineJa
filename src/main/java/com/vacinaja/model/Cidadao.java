@@ -123,10 +123,17 @@ public class Cidadao {
     }
 
     public void adicionarComorbidades(String comorbidade){
-        if(this.comorbidades.length() >= 0){
-            this.comorbidades += ", ";
+    	if (comorbidades == null) {
+        	this.comorbidades = comorbidade;
+        } else {
+        	if(this.comorbidades.length() >= 0){
+                
+            	this.comorbidades += ", ";
+            }
+            this.comorbidades += comorbidade;
         }
-        this.comorbidades += comorbidade;
+    	
+    	
     }
     public void setSituacao(EnumSituacoes situacao){
         this.situacao = situacao;

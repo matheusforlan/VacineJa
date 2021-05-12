@@ -43,6 +43,7 @@ public class ErroAplicacao {
 	}
 
 	public static ResponseEntity<?> erroVacinaIndisponivel(Long vacinaId){
-		return new ResponseEntity<CustomErrorType>(new CustomErrorType(String.format(ErroAplicacao.VACINA_INDISPONIVEL, vacinaId)), HttpStatus.NO_CONTENT);
+		return new ResponseEntity<CustomErrorType>(new CustomErrorType(String.format(ErroAplicacao.VACINA_INDISPONIVEL, vacinaId)), 
+		HttpStatus.NOT_FOUND);
 	}
 }

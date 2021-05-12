@@ -18,7 +18,7 @@ public class VacinaJaApplication {
 		FilterRegistrationBean<TokenFiltro> filterRB = new FilterRegistrationBean<TokenFiltro>();
 		filterRB.setFilter(new TokenFiltro());
 		filterRB.addUrlPatterns("/api/cadastro-cidadao", "/api/atualizar-cidadao","/{cpf}/adicionarComorbidades",
-				"/{cpf}/agendar-vacinacao");
+				"/{cpf}/agendar-vacinacao", "/{cpf}/ver-situacao");
 		return filterRB;
 	}
 

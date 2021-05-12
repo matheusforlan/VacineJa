@@ -45,6 +45,10 @@ public class LoteServiceImpl implements LoteService{
 
     @Override
     public boolean isVacinaDisponivel(long vacinaId) {
+        List<Lote> lotes = loteRepository.findByVacinaId(vacinaId);
+        return !lotes.isEmpty();
+        
+        /*
         boolean result = false;
 
         List<Lote> lotes = loteRepository.findAll();
@@ -61,6 +65,7 @@ public class LoteServiceImpl implements LoteService{
         }
 
         return result;
+    */
     }
 
     @Override
