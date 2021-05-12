@@ -1,19 +1,5 @@
 package com.vacinaja.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
-
 import com.vacinaja.DTO.FuncionarioDTO;
 import com.vacinaja.model.Cidadao;
 import com.vacinaja.model.Funcionario;
@@ -29,6 +15,20 @@ import com.vacinaja.util.ErroFuncionario;
 import com.vacinaja.util.ErroLote;
 import com.vacinaja.util.ErroVacina;
 import com.vacinaja.util.MetodosAuxiliares;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+
 
 @RestController
 @RequestMapping("/api")
@@ -182,7 +182,7 @@ public class FuncionarioApiController {
 
             for (Lote lote : lotes) {
 
-                if (lote.getVacina().equals(vacina)) {
+                if (lote.getVacinaId()==vacina.getId()) {
                     retornoVacina += "\n * " + lote.toString() + "\n";
                 }
             }

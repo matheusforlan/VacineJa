@@ -1,20 +1,19 @@
 package com.vacinaja.DTO;
 
-import com.vacinaja.model.Vacina;
 import java.sql.Date;
 
 public class LoteDTO {
 
     private long id;
 
-    private Vacina vacina;
+    private long vacinaId;
 
     private int quantidadeDoses;
 
     private Date dataValidade;
 
-    public LoteDTO(Vacina vacina, int quantidadeDoses, Date dataValidade) {
-        this.vacina = vacina;
+    public LoteDTO(long vacinaId, int quantidadeDoses, Date dataValidade) {
+        this.vacinaId = vacinaId;
         this.quantidadeDoses = quantidadeDoses;
         this.dataValidade = dataValidade;
     }
@@ -23,8 +22,8 @@ public class LoteDTO {
         return this.id;
     }
 
-    public Vacina getVacina() {
-        return this.vacina;
+    public long getVacinaId() {
+        return this.vacinaId;
     }
 
     public int getQuantidadeDoses() {

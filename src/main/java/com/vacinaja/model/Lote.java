@@ -5,7 +5,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 
 @Entity
 public class Lote {
@@ -14,8 +13,7 @@ public class Lote {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @ManyToOne
-    private Vacina vacina;
+    private long vacinaId;
 
     private int quantidadeDoses;
 
@@ -23,8 +21,8 @@ public class Lote {
 
     Lote() {}
 
-    public Lote(Vacina vacina, int quantidadeDoses, Date dataValidade) {
-        this.vacina = vacina;
+    public Lote(long vacinaId, int quantidadeDoses, Date dataValidade) {
+        this.vacinaId = vacinaId;
         this.quantidadeDoses = quantidadeDoses;
         this.dataValidade = dataValidade;
     }
@@ -33,8 +31,8 @@ public class Lote {
         return this.id;
     }
 
-    public Vacina getVacina() {
-        return this.vacina;
+    public long getVacinaId() {
+        return this.vacinaId;
     }
 
     public int getQuantidadeDoses() {
@@ -52,7 +50,7 @@ public class Lote {
     @Override
     public String toString() {
         return "Lote - " + this.id + "\n" +
-        "{Vacina - " + this.vacina.getNome() + "\n" +
+        "{Vacina - " + this.vacinaId + "\n" +
         " Quantidade de doses do lote - " + this.quantidadeDoses + "\n" +
         " Data de validade - " + this.dataValidade.toString() + "}\n";
 
