@@ -12,7 +12,8 @@ public class ErroCidadao {
 	static final String NAO_FOI_POSSIVEL_ATUALIZAR_CIDADAO = "Não foi possível atualizar a situação do cidadão de cpf %s.";
 
 	static final String CIDADAO_JA_CADASTRADO = "O cidadão com cpf %s já esta cadastrado";
-    
+	
+	static final String SEM_PERMISSAO = "Usuário sem permissão para realizar a operação";    
 
 
     public static ResponseEntity<CustomErrorType> erroCidadaoNaoEncontrado(String cpf) {
@@ -33,5 +34,10 @@ public class ErroCidadao {
 	public static ResponseEntity<?> erroCidadaoJaCadastrado(String cpf) {
 		return new ResponseEntity<CustomErrorType>(new CustomErrorType(String.format(ErroCidadao.CIDADAO_JA_CADASTRADO,
 				cpf)), HttpStatus.CONFLICT);
+	}
+
+	public static ResponseEntity<?> SemPermissao() {
+		return new ResponseEntity<CustomErrorType>(new CustomErrorType(String.format(ErroCidadao.SEM_PERMISSAO)),
+				HttpStatus.UNAUTHORIZED);
 	}
 }

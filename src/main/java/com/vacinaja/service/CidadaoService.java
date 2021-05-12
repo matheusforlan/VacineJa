@@ -7,6 +7,8 @@ import com.vacinaja.model.situacoes.EnumSituacoes;
 import java.util.List;
 import java.util.Optional;
 
+import javax.servlet.ServletException;
+
 
 public interface CidadaoService {
 
@@ -20,6 +22,14 @@ public interface CidadaoService {
 
     public void atualizarCidadao(CidadaoDTO cidadaoDTO, Cidadao cidadao);
 
-    public List<Cidadao> getCidadaosBySituacao(EnumSituacoes situacao);
+
+	public boolean validarUsuarioSenha(Cidadao cidadao);
+
+	public boolean validarRequisicao(String header,String cpf) throws ServletException;
+	
+	public String getIdRequester(String header) throws ServletException;
+	
+	 public List<Cidadao> getCidadaosBySituacao(EnumSituacoes situacao);
+
     
 }
