@@ -13,4 +13,6 @@ public interface FuncionarioRepository extends JpaRepository<Funcionario, String
 	
 	List<Funcionario> findByIsAprovadoFalse();
 
+	List<Funcionario> findAllByIsAprovadoFalse();
+
 }

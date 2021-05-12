@@ -5,8 +5,13 @@ import com.vacinaja.model.Cidadao;
 import com.vacinaja.model.situacoes.EnumSituacoes;
 import com.vacinaja.repository.CidadaoRepository;
 
+import java.security.SignatureException;
 import java.util.List;
+
 import java.util.Optional;
+
+import javax.servlet.ServletException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,6 +23,9 @@ public class CidadaoServiceImpl implements CidadaoService{
 
     @Autowired
     CidadaoRepository cidadaoRepository;
+    
+    @Autowired
+    JwtService jwtService;
 
     @Override
     public Optional<Cidadao> getCidadaoByCpf(String cpf) {
@@ -54,11 +62,44 @@ public class CidadaoServiceImpl implements CidadaoService{
         cidadao.setComorbidades(cidadaoDTO.getComorbidades());
     }
 
-    @Override
-    public List<Cidadao> getCidadaosBySituacao(EnumSituacoes situacao) {
-        return cidadaoRepository.findBySituacao(situacao);
-        
-    }
+	@Override
+	public boolean validarUsuarioSenha(Cidadao cidadao) {
+		Optional<Cidadao> optionalCidadao = getCidadaoByCpf(cidadao.getCpf());
+		
+		if (!optionalCidadao.isPresent()) {
+			return false;
+		}
+		
+		
+		
+		Cidadao cidadaoBD = optionalCidadao.get();
+		return cidadaoBD.getSenha().equals(cidadao.getSenha());
+
+	}
+
+	@Override
+	public boolean validarRequisicao(String header,String cpf) throws ServletException {
+		String idRequester = jwtService.getIdToken(header);
+		if (!idRequester.equals(cpf)) {
+			return false;
+		}
+		Optional<Cidadao> optionalCidadao = cidadaoRepository.findById(idRequester);
+		Cidadao cidadao = optionalCidadao.get();
+		return optionalCidadao.isPresent() && validarUsuarioSenha(cidadao);
+		
+		
+	}
+	
+	 @Override
+	 public List<Cidadao> getCidadaosBySituacao(EnumSituacoes situacao) {
+	        return cidadaoRepository.findBySituacao(situacao);
+	 }
+
+	@Override
+	public String getIdRequester(String header) throws ServletException {
+		return jwtService.getIdbyToken(header);
+	}
+	
 
 }
     
@@ -66,4 +107,3 @@ public class CidadaoServiceImpl implements CidadaoService{
   
 
     
-

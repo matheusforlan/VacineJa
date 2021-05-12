@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.vacinaja.DTO.CidadaoDTO;
 import com.vacinaja.DTO.FuncionarioDTO;
 import com.vacinaja.model.Funcionario;
 import com.vacinaja.repository.FuncionarioRepository;
@@ -16,6 +17,8 @@ public class FuncionarioServiceImpl implements FuncionarioService {
 	
 	@Autowired
 	FuncionarioRepository funcionarioRepository;
+	
+	private JwtService jwtService;
 
 	@Override
 	public void salvarFuncionario(Funcionario funcionario) {
@@ -35,6 +38,16 @@ public class FuncionarioServiceImpl implements FuncionarioService {
 	
 	@Override
 	public List<Funcionario> listarFuncionariosNaoAprovados() {
-		return funcionarioRepository.findByIsAprovadoFalse();
+		return funcionarioRepository.findAllByIsAprovadoFalse();
 	}
+
+	@Override
+	public void removerFuncionario(String cpf) {
+		 Funcionario funcionario = funcionarioRepository.findById(cpf).get();
+		 funcionarioRepository.delete(funcionario);
+		 
+		
+		
+	}
+
 }

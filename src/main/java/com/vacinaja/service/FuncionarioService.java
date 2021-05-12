@@ -17,4 +17,6 @@ public interface FuncionarioService {
 
 	public List<Funcionario> listarFuncionariosNaoAprovados();
 
+	public void removerFuncionario(String cpf);
+
 }
