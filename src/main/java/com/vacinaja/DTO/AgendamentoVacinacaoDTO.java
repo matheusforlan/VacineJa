@@ -1,19 +1,17 @@
 package com.vacinaja.DTO;
 
-import com.vacinaja.model.Cidadao;
-
 public class AgendamentoVacinacaoDTO {
 
     private long id;
 
-    private Cidadao cidadao;
+    private String cpfCidadao;
 
     private String data;
 
     private String horario;
 
-    public AgendamentoVacinacaoDTO(Cidadao cidadao, String data, String horario) {
-        this.cidadao = cidadao;
+    public AgendamentoVacinacaoDTO(String cpfCidadao, String data, String horario) {
+        this.cpfCidadao = cpfCidadao;
         this.data = data;
         this.horario = horario;
     }
@@ -22,8 +20,8 @@ public class AgendamentoVacinacaoDTO {
         return this.id;
     }
 
-    public Cidadao getCidadao() {
-        return this.cidadao;
+    public String getCpfCidadao() {
+        return this.cpfCidadao;
     }
 
     public String getData() {

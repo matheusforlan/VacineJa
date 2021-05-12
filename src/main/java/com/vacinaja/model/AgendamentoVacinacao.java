@@ -4,7 +4,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToOne;
 import org.springframework.format.annotation.DateTimeFormat;
 
 
@@ -15,8 +14,7 @@ public class AgendamentoVacinacao {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    @ManyToOne
-    private Cidadao cidadao;
+    private String cpfCidadao;
 
     @DateTimeFormat(pattern = "dd-mm-yyyy")
     private String data;
@@ -26,8 +24,8 @@ public class AgendamentoVacinacao {
 
     AgendamentoVacinacao() {}
 
-    public AgendamentoVacinacao(Cidadao cidadao, String data, String horario) {
-        this.cidadao = cidadao;
+    public AgendamentoVacinacao(String cpfCidadao, String data, String horario) {
+        this.cpfCidadao = cpfCidadao;
         this.data = data;
         this.horario = horario;
     }
@@ -36,8 +34,8 @@ public class AgendamentoVacinacao {
         return this.id;
     }
 
-    public Cidadao getCidadao() {
-        return this.cidadao;
+    public String getCidadao() {
+        return this.cpfCidadao;
     }
 
     public String getData() {

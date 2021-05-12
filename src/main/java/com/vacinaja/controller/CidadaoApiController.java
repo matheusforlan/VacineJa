@@ -82,19 +82,20 @@ public class CidadaoApiController {
     }
 
     // ------------------------------------------ agendamento de vacinação do cidadao ------------------------------------------
-    @RequestMapping(value = "/{cpf}/agendar-vacinacao", method = RequestMethod.POST)
-    public ResponseEntity<?> agendarVacinacao(@PathVariable("cpf") String cpf, @RequestBody AgendamentoVacinacaoDTO agendamentoVacinacaoDTO) {
-        Optional<Cidadao> optionalCidadao = cidadaoService.getCidadaoByCpf(cpf);
+    @RequestMapping(value = "/agendar-vacinacao", method = RequestMethod.POST)
+    public ResponseEntity<?> agendarVacinacao(@RequestBody AgendamentoVacinacaoDTO agendamentoVacinacaoDTO) {
+        Optional<Cidadao> optionalCidadao = cidadaoService.getCidadaoByCpf(agendamentoVacinacaoDTO.getCpfCidadao());
 
         if (!optionalCidadao.isPresent()) {
-            return ErroCidadao.erroCidadaoNaoEncontrado(cpf);
+            return ErroCidadao.erroCidadaoNaoEncontrado(agendamentoVacinacaoDTO.getCpfCidadao());
         }
 
-        //Cidadao cidadao = optionalCidadao.get();
-
         /*
+        Cidadao cidadao = optionalCidadao.get();
+
+        
         if (!cidadao.habilitadoDose1()) {
-            return ErroAplicacao.erroCidadaoNaoHabilitadoParaVacina(cpf);
+            return ErroAplicacao.erroCidadaoNaoHabilitadoParaVacina(agendamentoVacinacaoDTO.getCpfCidadao());
         }
 
         Optional<AgendamentoVacinacao> optionalAgendamentoVacinacao = agendamentoVacinacaoService.getAgendamentoVacinacaoById(agendamentoVacinacaoDTO.getId());
