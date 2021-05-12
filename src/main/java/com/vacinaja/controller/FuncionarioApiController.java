@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.util.UriComponentsBuilder;
 
 import com.vacinaja.DTO.FuncionarioDTO;
 import com.vacinaja.model.Cidadao;
@@ -47,18 +46,18 @@ public class FuncionarioApiController {
 	
 	// ------------------------------------------ cadastro de funcionário ------------------------------------------
     @RequestMapping(value = "/cadastro-funcionario", method = RequestMethod.POST)
-    public ResponseEntity<?> cadastrarFuncionario(@RequestBody FuncionarioDTO funcionarioDTO, UriComponentsBuilder ucBuilder){
+    public ResponseEntity<?> cadastrarFuncionario(@RequestBody String cpf, String cargo, String localDeTrabalho){
                
-        Optional<Cidadao> optionalCidadao = cidadaoService.getCidadaoByCpf(funcionarioDTO.getCpf());
+        Optional<Cidadao> optionalCidadao = cidadaoService.getCidadaoByCpf(cpf);
         
         if(!optionalCidadao.isPresent()){
-            return ErroCidadao.erroCidadaoNaoEncontrado(funcionarioDTO.getCpf());
+            return ErroCidadao.erroCidadaoNaoEncontrado(cpf);
         }
         
-        Optional<Funcionario> optionalFuncionario = funcionarioService.getFuncionarioByCpf(funcionarioDTO.getCpf());
+        Optional<Funcionario> optionalFuncionario = funcionarioService.getFuncionarioByCpf(cpf);
         
         if(optionalFuncionario.isPresent()) {
-            return ErroFuncionario.erroFuncionarioJaCadastrado(funcionarioDTO.getCpf());
+            return ErroFuncionario.erroFuncionarioJaCadastrado(cpf);
         }
         
         Cidadao cidadao = optionalCidadao.get();
@@ -66,19 +65,19 @@ public class FuncionarioApiController {
         //removendo o cidadao com mesmo id, pra n dar conflito
         cidadaoService.removerCidadao(cidadao);
         
-        //pra poder retornar o objeto certo, ja que ele n ta aprovado,
-        funcionarioDTO.setAprovado(false);
+        FuncionarioDTO funcionarioDTO = new FuncionarioDTO(cpf, cidadao.getNome(), cidadao.getDataNasc(), cidadao.getCartaoSus(), 
+        cidadao.getTelefone(), cidadao.getEmail(), cidadao.getProfissao(), cidadao.getComorbidades(), cidadao.getSenha(), cargo, localDeTrabalho);
         
         // Precisa da autorização do administrador do sistema.
         funcionarioService.cadastrarFuncionario(funcionarioDTO);   
 
         return new ResponseEntity<FuncionarioDTO>(funcionarioDTO, HttpStatus.OK);
     }
+
     @RequestMapping(value = "/ativar-comorbidade", method = RequestMethod.POST)
     public ResponseEntity<?> ativarComorbidade(@RequestBody String comorbidade){
         return null;
     }
-
 
     // ------------------------Listar Pessoas não habilitdas que possuem alguma comorbidade X ----------------------------------
     @RequestMapping(value = "/listagem-cidadaos/{comorbidade}", method = RequestMethod.GET)
@@ -102,7 +101,6 @@ public class FuncionarioApiController {
         return new ResponseEntity<List<Cidadao>>(cidadaos, HttpStatus.OK);
     }
 
-
     // ------------------------Listar Pessoas não habilitdas que possuem a idade maior ou igual a uma idade X ----------------------------
     @RequestMapping(value = "/listagem-cidadaos/{idade}", method = RequestMethod.GET)
     public ResponseEntity<?> listarCidadaosComIdadeMinima(@RequestParam int idade){
@@ -112,6 +110,7 @@ public class FuncionarioApiController {
         }
         return new ResponseEntity<List<Cidadao>>(cidadaos, HttpStatus.OK);
     }
+
     // ---------------------------Ativar idade minima -----------------------------------------------------------------------
     @RequestMapping(value = "/habilitar-idade/{idade}", method = RequestMethod.PUT)
     public ResponseEntity<?> habilitarCidadaosComIdadeMinima(@RequestParam int idade){
@@ -125,6 +124,7 @@ public class FuncionarioApiController {
         }
         return new ResponseEntity<List<Cidadao>>(cidadaos, HttpStatus.OK);
     }
+
     // ------------------------Habilitar Pessoas que possuem alguma comorbidade X ----------------------------------
     @RequestMapping(value = "/habilitar-comorbidade/{comorbidade}", method = RequestMethod.PUT)
     public ResponseEntity<?> habilitarCidadaosComComorbidade(@RequestParam String comorbidade){
@@ -139,6 +139,7 @@ public class FuncionarioApiController {
         return new ResponseEntity<List<Cidadao>>(cidadaos, HttpStatus.OK);
 
     }
+
     // ------------------------Habilitar Pessoas que possuem alguma Profissoa X ----------------------------------
     @RequestMapping(value = "/habilitar-profissao/{profissao}", method = RequestMethod.PUT)
     public ResponseEntity<?> habilitarCidadaosComProfissao(@RequestParam String profissao){
@@ -157,7 +158,6 @@ public class FuncionarioApiController {
 
 
     }
-
 
     // ------------------------------------------ metodo para listar vacinas com lotes disponiveis ------------------------------------------
     @RequestMapping(value = "/listar-vacinas-disponiveis", method = RequestMethod.GET)
@@ -198,7 +198,8 @@ public class FuncionarioApiController {
 
         return new ResponseEntity<String>(vacinasDisponiveis, HttpStatus.OK);
     }
-     //--------------------------------------Métodos auxiliares especificos -------------------------------------------------------
+
+    //--------------------------------------Métodos auxiliares especificos -------------------------------------------------------
 
      private List<Cidadao> geraCidadaosNaoHabilitadosComComorbidade(String comorbidade) {
         List<Cidadao> cidadaos = cidadaoService.getCidadaosBySituacao(EnumSituacoes.NAO_HABILITADO);
@@ -211,6 +212,7 @@ public class FuncionarioApiController {
         }
         return aux;
     }
+    
     private List<Cidadao> geraCidadaosNaoHabilitadosComProfissao(String profissao){
         List<Cidadao> cidadaos = cidadaoService.getCidadaosBySituacao(EnumSituacoes.NAO_HABILITADO);
         

@@ -1,6 +1,5 @@
 package com.vacinaja.model;
 
-import com.vacinaja.model.Cidadao;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;

@@ -19,10 +19,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
 
-import io.micrometer.core.ipc.http.HttpSender.Response;
-
-
-
 @RestController
 @RequestMapping("/api")
 @CrossOrigin
@@ -94,7 +90,7 @@ public class CidadaoApiController {
             return ErroCidadao.erroCidadaoNaoEncontrado(cpf);
         }
 
-        Cidadao cidadao = optionalCidadao.get();
+        //Cidadao cidadao = optionalCidadao.get();
 
         /*
         if (!cidadao.habilitadoDose1()) {

@@ -1,6 +1,5 @@
 package com.vacinaja.util;
 
-import com.vacinaja.util.CustomErrorType;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 

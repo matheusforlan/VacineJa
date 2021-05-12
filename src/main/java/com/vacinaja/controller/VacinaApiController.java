@@ -5,7 +5,6 @@ import com.vacinaja.model.Vacina;
 import com.vacinaja.service.VacinaService;
 import com.vacinaja.util.ErroVacina;
 
-import java.math.BigInteger;
 import java.util.List;
 import java.util.Optional;
 
