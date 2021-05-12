@@ -31,7 +31,7 @@ public class AgendamentoVacinacaoServiceImpl implements AgendamentoVacinacaoServ
 
     @Override
     public void cadastrarAgendamentoVacinacao(AgendamentoVacinacaoDTO agendamentoVacinacaoDTO) {
-        AgendamentoVacinacao agendamentoVacinacao = new AgendamentoVacinacao(agendamentoVacinacaoDTO.getCidadao(), agendamentoVacinacaoDTO.getData(), agendamentoVacinacaoDTO.getHorario());
+        AgendamentoVacinacao agendamentoVacinacao = new AgendamentoVacinacao(agendamentoVacinacaoDTO.getCpfCidadao(), agendamentoVacinacaoDTO.getData(), agendamentoVacinacaoDTO.getHorario());
 
         agendamentoVacinacaoRepository.save(agendamentoVacinacao);
     }
