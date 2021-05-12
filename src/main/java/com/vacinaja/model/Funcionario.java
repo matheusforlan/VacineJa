@@ -13,7 +13,6 @@ public class Funcionario extends Cidadao{
 	private String localDeTrabalho;
 	boolean isAprovado;
 	
-
 	Funcionario() {}
 
 	public Funcionario(String cargo, String localDeTrabalho) {
