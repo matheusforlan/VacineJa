@@ -63,5 +63,21 @@ public final class JwtService {
 		return subject;
 	}
 	
+	public String getIdToken(String header) throws ServletException {
+		 if ( header == null || !header.startsWith("Bearer ")) {
+			 throw new ServletException("Token inexistente ou mal formado.");
+		 }
+		 String token = header.substring(TokenFiltro.TOKEN_INDEX);
+		 
+		 String idRequest = null;
+		 try {
+			  idRequest = Jwts.parser().setSigningKey(TOKEN_KEY).parseClaimsJws(token)
+					 .getBody().getSubject();
+		 }catch (SignatureException e) {
+			 throw new ServletException("Token invalido ou expirado.");
+		 }
+		 return idRequest;
+	}
+	
 	
 }

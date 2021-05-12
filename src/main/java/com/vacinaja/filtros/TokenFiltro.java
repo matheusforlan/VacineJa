@@ -34,7 +34,7 @@ public class TokenFiltro extends GenericFilterBean {
 			throw new ServletException("Token inexistente ou mal formatado!");
 		}
 
-		// Extraindo apenas o token do cabecalho.
+	
 		String token = header.substring(TOKEN_INDEX);
 
 		try {

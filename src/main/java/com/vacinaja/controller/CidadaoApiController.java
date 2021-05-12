@@ -7,6 +7,9 @@ import com.vacinaja.service.AgendamentoVacinacaoService;
 import com.vacinaja.service.CidadaoService;
 import com.vacinaja.util.ErroCidadao;
 import java.util.Optional;
+
+import javax.servlet.ServletException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -50,9 +53,13 @@ public class CidadaoApiController {
     // ------------------------------------------ atualização de dados do cidadao ------------------------------------------
     @RequestMapping(value = "/atualizar-cidadao", method = RequestMethod.PUT)
     public ResponseEntity<?> atualizarCidadao(@RequestBody CidadaoDTO cidadaoDTO, 
-    		@RequestHeader ("Authorization") String header) {
-
-        Optional<Cidadao> optionalCidadao = cidadaoService.getCidadaoByCpf(cidadaoDTO.getCpf());
+    		@RequestHeader ("Authorization") String header) throws ServletException {
+    	
+    	if(!cidadaoService.validarRequisicao(header)) {
+    		return ErroCidadao.SemPermissao();
+    	}
+    	
+    	Optional<Cidadao> optionalCidadao = cidadaoService.getCidadaoByCpf(cidadaoDTO.getCpf());
 
         if (!optionalCidadao.isPresent()) {
             return ErroCidadao.erroCidadaoNaoEncontrado(cidadaoDTO.getCpf());

@@ -4,6 +4,8 @@ import com.vacinaja.DTO.CidadaoDTO;
 import com.vacinaja.model.Cidadao;
 import java.util.Optional;
 
+import javax.servlet.ServletException;
+
 
 public interface CidadaoService {
 
@@ -18,5 +20,7 @@ public interface CidadaoService {
     public void atualizarCidadao(CidadaoDTO cidadaoDTO, Cidadao cidadao);
 
 	public boolean validarUsuarioSenha(Cidadao cidadao);
+
+	public boolean validarRequisicao(String header) throws ServletException;
     
 }
