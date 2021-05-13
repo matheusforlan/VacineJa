@@ -4,6 +4,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToOne;
+
 import org.springframework.format.annotation.DateTimeFormat;
 
 
@@ -14,6 +16,7 @@ public class AgendamentoVacinacao {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
+    @OneToOne
     private Cidadao cidadao;
 
     @DateTimeFormat(pattern = "dd-mm-yyyy")

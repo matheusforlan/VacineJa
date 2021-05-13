@@ -3,7 +3,6 @@ insert into cidadao
 values ('Admin', '123', null, null, null, null, 'Administrador', null, '123', null, null, null, null);
 
 insert into cidadao 
-
 (DTYPE, CPF, CARTAO_SUS, COMORBIDADES, DATA_NASC, EMAIL, NOME, PROFISSAO, SENHA, TELEFONE, CARGO, IS_APROVADO, LOCAL_DE_TRABALHO) 
 values ('Cidadao', '1234', null, null, null, null, 'Kleberson', null, '1234', null, null, null, null);
 
@@ -11,6 +10,7 @@ insert into cidadao
 (DTYPE, CPF, CARTAO_SUS, COMORBIDADES, DATA_NASC, EMAIL, NOME, PROFISSAO, SENHA, TELEFONE, CARGO, IS_APROVADO, LOCAL_DE_TRABALHO) 
 values ('Funcionario', '12345', null, null, null, null, 'Forlan', null, '12345', null, null, true, null);
 
+insert into cidadao
 (DTYPE, CPF, CARTAO_SUS, COMORBIDADES, DATA_NASC, EMAIL, NOME, PROFISSAO, SENHA, SITUACAO, TELEFONE, CARGO, IS_APROVADO, LOCAL_DE_TRABALHO) 
 values ('Funcionario', '987654', '987654', null, '2000-05-11', 'exemplo@boll.com', 'José Bonifácio', 'Enermeiro', '123', 'NAO_HABILITADO', '99999999', 'Enfermeiro', true, 'PSF-II');
 
