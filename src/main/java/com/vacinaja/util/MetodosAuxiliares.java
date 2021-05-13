@@ -1,11 +1,24 @@
 package com.vacinaja.util;
 
-import java.util.Calendar;
+
+
 import java.util.Date;
-import java.util.GregorianCalendar;
+
+
+import org.joda.time.DateTime;
+import org.joda.time.Days;
+import org.joda.time.Years;
 
 public class MetodosAuxiliares {
     public static int calculaIdade(Date dataNasc){
+        DateTime hoje = new DateTime();
+        DateTime dataNascimento = new DateTime(dataNasc);
+        
+        Years anos = Years.yearsBetween(hoje, dataNascimento);
+        return anos.getYears();
+
+        
+        /*
         Calendar dataNascimento = new GregorianCalendar();
         dataNascimento.setTime(dataNasc);
 
@@ -13,14 +26,24 @@ public class MetodosAuxiliares {
 
         int idade = hoje.get(Calendar.YEAR) - dataNascimento.get(Calendar.YEAR);
 
-        dataNascimento.setTime(dataNasc);
-
         if (hoje.before(dataNascimento)) {
 
             idade--;
             
         }   
         return idade;  
+        */
+        
+
+    }
+
+    public static int caculaDias(java.sql.Date dataAplicacao) {
+        DateTime hoje = new DateTime();
+        DateTime data = new DateTime(dataAplicacao);
+        
+        Days dias = Days.daysBetween(hoje, data);
+        return dias.getDays();
+
     }
 
 }

@@ -1,20 +1,27 @@
 package com.vacinaja.controller;
 
 import com.vacinaja.DTO.FuncionarioDTO;
+import com.vacinaja.model.AplicacaoVacina;
 import com.vacinaja.model.Cidadao;
 import com.vacinaja.model.Funcionario;
 import com.vacinaja.model.Lote;
 import com.vacinaja.model.Vacina;
 import com.vacinaja.model.situacoes.EnumSituacoes;
+import com.vacinaja.service.AplicacaoVacinaService;
 import com.vacinaja.service.CidadaoService;
 import com.vacinaja.service.FuncionarioService;
 import com.vacinaja.service.LoteService;
 import com.vacinaja.service.VacinaService;
+import com.vacinaja.util.ErroAplicacao;
 import com.vacinaja.util.ErroCidadao;
 import com.vacinaja.util.ErroFuncionario;
 import com.vacinaja.util.ErroLote;
 import com.vacinaja.util.ErroVacina;
 import com.vacinaja.util.MetodosAuxiliares;
+
+
+import org.joda.time.DateTime;
+import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -26,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 
@@ -43,6 +51,8 @@ public class FuncionarioApiController {
     VacinaService vacinaService;
     @Autowired
     LoteService loteService;
+    @Autowired
+    AplicacaoVacinaService aplicacaoService;
 	
 	// ------------------------------------------ cadastro de funcionário ------------------------------------------
     @RequestMapping(value = "/cadastro-funcionario", method = RequestMethod.POST)
@@ -199,9 +209,33 @@ public class FuncionarioApiController {
         return new ResponseEntity<String>(vacinasDisponiveis, HttpStatus.OK);
     }
 
+    // metodo que olha se os cidadãos ja podem tomar a dose 2
+    @RequestMapping(value = "/checar-situação-cidadaos-para-dose2", method = RequestMethod.PUT)
+    public ResponseEntity<?> checarCidadaos(){
+        List<Cidadao> cidadaos = cidadaoService.getCidadaosBySituacao(EnumSituacoes.TOMOU_DOSE_1);
+        List<Cidadao> aux = new ArrayList<>();
+        if(!cidadaos.isEmpty()){
+            for(Cidadao cidadao: cidadaos){
+                AplicacaoVacina aplicacaoVacina = aplicacaoService.getById(cidadao.getCpf()).get();
+
+                if(calculaDias(aplicacaoVacina.getVacina(), aplicacaoVacina.getDataAplicacao()));
+            }
+        }
+        return new ResponseEntity<List<Cidadao>>(aux, HttpStatus.OK);
+    }
+    
+    
+    
+    
     //--------------------------------------Métodos auxiliares especificos -------------------------------------------------------
 
-     private List<Cidadao> geraCidadaosNaoHabilitadosComComorbidade(String comorbidade) {
+     private boolean calculaDias(Vacina vacina, Date dataAplicacao) {
+        int diasParaDose2 = vacina.getDiasParaSegundaDose();
+        int diasQuePassaram = MetodosAuxiliares.caculaDias(dataAplicacao);
+        return diasQuePassaram >= diasParaDose2;
+    }
+
+    private List<Cidadao> geraCidadaosNaoHabilitadosComComorbidade(String comorbidade) {
         List<Cidadao> cidadaos = cidadaoService.getCidadaosBySituacao(EnumSituacoes.NAO_HABILITADO);
         
         List<Cidadao> aux = new ArrayList<Cidadao>();
