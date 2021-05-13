@@ -34,10 +34,10 @@ public class LoteApiController {
     // ------------------------------------------ cadastro de lotes de vacina no sistema ------------------------------------------
     @RequestMapping(value = "/cadastro-lote", method = RequestMethod.POST)
     public ResponseEntity<?> cadastrarLote(@RequestBody LoteDTO loteDTO, UriComponentsBuilder ucBuilder) {
-        Optional<Vacina> optionalVacina = vacinaService.getVacinaById(loteDTO.getVacina().getId());
+        Optional<Vacina> optionalVacina = vacinaService.getVacinaById(loteDTO.getVacinaId());
 
         if (!optionalVacina.isPresent()) {
-            return ErroVacina.erroVacinaNaoEncontrada(loteDTO.getVacina().getId());
+            return ErroVacina.erroVacinaNaoEncontrada(loteDTO.getVacinaId());
         }
 
         Vacina vacina = optionalVacina.get();

@@ -14,7 +14,7 @@ public class AgendamentoVacinacao {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    private String cpfCidadao;
+    private Cidadao cidadao;
 
     @DateTimeFormat(pattern = "dd-mm-yyyy")
     private String data;
@@ -24,8 +24,8 @@ public class AgendamentoVacinacao {
 
     AgendamentoVacinacao() {}
 
-    public AgendamentoVacinacao(String cpfCidadao, String data, String horario) {
-        this.cpfCidadao = cpfCidadao;
+    public AgendamentoVacinacao(Cidadao cidadao, String data, String horario) {
+        this.cidadao = cidadao;
         this.data = data;
         this.horario = horario;
     }
@@ -34,8 +34,8 @@ public class AgendamentoVacinacao {
         return this.id;
     }
 
-    public String getCidadao() {
-        return this.cpfCidadao;
+    public Cidadao getCidadao() {
+        return this.cidadao;
     }
 
     public String getData() {

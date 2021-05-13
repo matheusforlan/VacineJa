@@ -2,6 +2,7 @@ package com.vacinaja.service;
 
 import com.vacinaja.DTO.AgendamentoVacinacaoDTO;
 import com.vacinaja.model.AgendamentoVacinacao;
+import com.vacinaja.model.Cidadao;
 import com.vacinaja.repository.AgendamentoVacinacaoRepository;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +31,8 @@ public class AgendamentoVacinacaoServiceImpl implements AgendamentoVacinacaoServ
     }
 
     @Override
-    public void cadastrarAgendamentoVacinacao(AgendamentoVacinacaoDTO agendamentoVacinacaoDTO) {
-        AgendamentoVacinacao agendamentoVacinacao = new AgendamentoVacinacao(agendamentoVacinacaoDTO.getCpfCidadao(), agendamentoVacinacaoDTO.getData(), agendamentoVacinacaoDTO.getHorario());
+    public void cadastrarAgendamentoVacinacao(AgendamentoVacinacaoDTO agendamentoVacinacaoDTO, Cidadao cidadao) {
+        AgendamentoVacinacao agendamentoVacinacao = new AgendamentoVacinacao(cidadao, agendamentoVacinacaoDTO.getData(), agendamentoVacinacaoDTO.getHorario());
 
         agendamentoVacinacaoRepository.save(agendamentoVacinacao);
     }

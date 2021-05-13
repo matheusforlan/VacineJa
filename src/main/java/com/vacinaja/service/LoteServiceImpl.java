@@ -36,7 +36,7 @@ public class LoteServiceImpl implements LoteService{
 
     @Override
     public Lote cadastrarLote(LoteDTO loteDTO) {
-        Lote lote = new Lote(loteDTO.getVacina(), loteDTO.getQuantidadeDoses(), loteDTO.getDataValidade());
+        Lote lote = new Lote(loteDTO.getVacinaId(), loteDTO.getQuantidadeDoses(), loteDTO.getDataValidade());
 
         loteRepository.save(lote);
 
@@ -46,46 +46,26 @@ public class LoteServiceImpl implements LoteService{
     @Override
     public boolean isVacinaDisponivel(long vacinaId) {
         List<Lote> lotes = loteRepository.findByVacinaId(vacinaId);
-        return !lotes.isEmpty();
         
-        /*
-        boolean result = false;
-
-        List<Lote> lotes = loteRepository.findAll();
-
-        if (lotes.isEmpty()) {
-            return result;
-        }
-
-        for (Lote lote : lotes) {
-            if (lote.getVacina().getId()==vacinaId) {
-                result = true;
-                break;
-            }
-        }
-
-        return result;
-    */
+        return (!lotes.isEmpty());
     }
 
     @Override
     public void tomarDose(long vacinaId) {
-        List<Lote> lotes = loteRepository.findAll();
+        List<Lote> lotes = loteRepository.findByVacinaId(vacinaId);
 
-        for (Lote lote : lotes) {
-            if (lote.getVacina().getId()==vacinaId) {
-                int quantidadeDeDoses = lote.getQuantidadeDoses()-1;
+        if (!lotes.isEmpty()) {
+            Lote lote = lotes.get(0);
+            
+            int quantidadeDeDoses = lote.getQuantidadeDoses()-1;
+            lote.setQuantidadeDoses(quantidadeDeDoses);
 
-                lote.setQuantidadeDoses(quantidadeDeDoses);
-
-                if (lote.getQuantidadeDoses()==0) {
-                    loteRepository.delete(lote);
-                } else {
-                    loteRepository.save(lote);
-                }
-
-                break;
+            if (lote.getQuantidadeDoses()==0) {
+                loteRepository.delete(lote);
+            } else {
+                loteRepository.save(lote);
             }
+
         }
     }
 }

@@ -2,14 +2,17 @@ package com.vacinaja.controller;
 
 import com.vacinaja.DTO.AgendamentoVacinacaoDTO;
 import com.vacinaja.DTO.CidadaoDTO;
+import com.vacinaja.model.AgendamentoVacinacao;
 import com.vacinaja.model.Cidadao;
+import com.vacinaja.model.situacoes.EnumSituacoes;
+import com.vacinaja.model.situacoes.HabilitadoDose1;
 import com.vacinaja.service.AgendamentoVacinacaoService;
 import com.vacinaja.service.CidadaoService;
+import com.vacinaja.util.ErroAgendamentoVacinacao;
+import com.vacinaja.util.ErroAplicacao;
 import com.vacinaja.util.ErroCidadao;
 import java.util.Optional;
-
 import javax.servlet.ServletException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +25,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.util.UriComponentsBuilder;
+
+
 
 @RestController
 @RequestMapping("/api")
@@ -107,11 +112,11 @@ public class CidadaoApiController {
             return ErroCidadao.erroCidadaoNaoEncontrado(agendamentoVacinacaoDTO.getCpfCidadao());
         }
 
-        /*
+        
         Cidadao cidadao = optionalCidadao.get();
 
         
-        if (!cidadao.habilitadoDose1()) {
+        if (!cidadaoHabilitadoDose1(cidadao)) {
             return ErroAplicacao.erroCidadaoNaoHabilitadoParaVacina(agendamentoVacinacaoDTO.getCpfCidadao());
         }
 
@@ -121,8 +126,7 @@ public class CidadaoApiController {
             return ErroAgendamentoVacinacao.erroDataHorarioJaAgendados(agendamentoVacinacaoDTO.getId());
         }
 
-        agendamentoVacinacaoService.cadastrarAgendamentoVacinacao(agendamentoVacinacaoDTO);
-        */
+        agendamentoVacinacaoService.cadastrarAgendamentoVacinacao(agendamentoVacinacaoDTO, cidadao);
 
         return new ResponseEntity<AgendamentoVacinacaoDTO>(agendamentoVacinacaoDTO, HttpStatus.OK);
     }
@@ -142,6 +146,15 @@ public class CidadaoApiController {
         }
         Cidadao cidadao = optionalCidadao.get();
         return new ResponseEntity<String>(cidadao.toString(), HttpStatus.OK);
+    }
+
+    
+    //--------------------------------------Métodos auxiliares especificos -------------------------------------------------------
+    
+    private boolean cidadaoHabilitadoDose1(Cidadao cidadao) {
+        EnumSituacoes situacao = cidadao.getSituacao();
+
+        return (situacao.getSituacao() instanceof HabilitadoDose1);
     }
 
 }
