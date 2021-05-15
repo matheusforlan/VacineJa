@@ -114,7 +114,7 @@ public class FuncionarioApiController {
        return new ResponseEntity<List<Cidadao>>(cidadaos, HttpStatus.OK);
     }
     
-    // ------------------------Listar Pessoas não habilitdas que possuem alguma Profissoa X ----------------------------------
+    // ------------------------Listar Pessoas não habilitdas que possuem alguma Profissão X ----------------------------------
     @RequestMapping(value = "/listagem-cidadaos/{profissao}", method = RequestMethod.GET)
     public ResponseEntity<?> listarCidadaosComProfissaoAtivada(@RequestParam String profissao,
     	@RequestHeader ("Authorization") String header){
@@ -154,14 +154,17 @@ public class FuncionarioApiController {
     	if (erroRequisicao != null) return  erroRequisicao;
     	
     	List<Cidadao> cidadaos = geraCidadaosNaoHabilitadosComIdadeMinima(idade);
+    	List<String> cidadaosNotificados = new ArrayList<String>();
         if(cidadaos.isEmpty()) {
             return new ResponseEntity<String>("Não foi possível encontrar cidadãos com idade no mínimo igual a " + idade + ".", HttpStatus.NOT_FOUND);
         }
         for(Cidadao cidadao : cidadaos){
             cidadao.getSituacao().getSituacao().mudaSituacao(cidadao);
             cidadaoService.salvarCidadao(cidadao);
+            cidadaosNotificados.add("SMS e e-mail enviados para " + cidadao.getNome() + " - " + cidadao.getEmail()+
+            		" - " + cidadao.getTelefone() + " - para tomar a primeira dose. \n");
         }
-        return new ResponseEntity<List<Cidadao>>(cidadaos, HttpStatus.OK);
+        return new ResponseEntity<List<String>>(cidadaosNotificados, HttpStatus.OK);
     }
 
     // ------------------------Habilitar Pessoas que possuem alguma comorbidade X ----------------------------------
@@ -173,14 +176,17 @@ public class FuncionarioApiController {
     	if (erroRequisicao != null) return  erroRequisicao;
     	
     	List<Cidadao> cidadaos = geraCidadaosNaoHabilitadosComComorbidade(comorbidade);
+    	List<String> cidadaosNotificados = new ArrayList<String>();
         if(cidadaos.isEmpty()) {
             return new ResponseEntity<String>("Não foi possível encontrar cidadãos com essa comorbidade na base de dados.", HttpStatus.NOT_FOUND);
         }
         for(Cidadao cidadao : cidadaos){
             cidadao.getSituacao().getSituacao().mudaSituacao(cidadao);
             cidadaoService.salvarCidadao(cidadao);
+            cidadaosNotificados.add("SMS e e-mail enviados para " + cidadao.getNome() + " - " + cidadao.getEmail()+
+            		" - " + cidadao.getTelefone() + " - para tomar a primeira dose. \n");
         }
-        return new ResponseEntity<List<Cidadao>>(cidadaos, HttpStatus.OK);
+        return new ResponseEntity<List<String>>(cidadaosNotificados, HttpStatus.OK);
 
     }
 
@@ -193,6 +199,7 @@ public class FuncionarioApiController {
     	if (erroRequisicao != null) return  erroRequisicao;
     	
     	List<Cidadao> cidadaos = geraCidadaosNaoHabilitadosComProfissao(profissao);
+    	List<String> cidadaosNotificados = new ArrayList<String>();
         if(cidadaos.isEmpty()) {
             return new ResponseEntity<String>("Não foi possível encontrar cidadãos com essa profissão na base de dados.", HttpStatus.NOT_FOUND);
     
@@ -200,11 +207,12 @@ public class FuncionarioApiController {
         for(Cidadao cidadao : cidadaos){
             cidadao.getSituacao().getSituacao().mudaSituacao(cidadao);
             cidadaoService.salvarCidadao(cidadao);
+            cidadaosNotificados.add("SMS e e-mail enviados para " + cidadao.getNome() + " - " + cidadao.getEmail()+
+            		" - " + cidadao.getTelefone() + " - para tomar a primeira dose. \n");
         }
         
-        return new ResponseEntity<List<Cidadao>>(cidadaos, HttpStatus.OK);
+        return new ResponseEntity<List<String>>(cidadaosNotificados, HttpStatus.OK);
    
-
     }
 
     // ------------------------------------------ metodo para listar vacinas com lotes disponiveis ------------------------------------------
@@ -259,21 +267,24 @@ public class FuncionarioApiController {
     	if (erroRequisicao != null) return  erroRequisicao;
     	
     	List<Cidadao> cidadaos = cidadaoService.getCidadaosBySituacao(EnumSituacoes.TOMOU_DOSE_1);
-        List<Cidadao> aux = new ArrayList<>();
+    	List<String> cidadaosNotificados = new ArrayList<String>();
         if(!cidadaos.isEmpty()){
             for(Cidadao cidadao: cidadaos){
                 AplicacaoVacina aplicacaoVacina = aplicacaoService.getById(cidadao.getCpf()).get();
 
-                if(calculaDias(aplicacaoVacina.getVacina(), aplicacaoVacina.getDataAplicacao()));
+                if(calculaDias(aplicacaoVacina.getVacina(), aplicacaoVacina.getDataAplicacao())) {
+                	cidadaosNotificados.add("SMS e e-mail enviados para " + cidadao.getNome() + " - " + cidadao.getEmail()+
+                    		" - " + cidadao.getTelefone() + " - para tomar a segunda dose. \n");
+                }
             }
         }
-        return new ResponseEntity<List<Cidadao>>(aux, HttpStatus.OK);
+        return new ResponseEntity<List<String>>(cidadaosNotificados, HttpStatus.OK);
     }
     
     
     
     
-    //--------------------------------------Métodos auxiliares especificos -------------------------------------------------------
+    //--------------------------------------Métodos auxiliares específicos -------------------------------------------------------
 
      private boolean calculaDias(Vacina vacina, Date dataAplicacao) {
         int diasParaDose2 = vacina.getDiasParaSegundaDose();
