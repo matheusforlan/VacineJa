@@ -8,5 +8,6 @@ import com.vacinaja.model.Cidadao;
 import com.vacinaja.model.situacoes.EnumSituacoes;
 
 public interface CidadaoRepository extends JpaRepository<Cidadao, String>{
-    public List<Cidadao> findBySituacao(EnumSituacoes situacao);
+    
+	public List<Cidadao> findBySituacao(EnumSituacoes situacao);
 }

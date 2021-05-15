@@ -40,4 +40,9 @@ public class ErroCidadao {
 		return new ResponseEntity<CustomErrorType>(new CustomErrorType(String.format(ErroCidadao.SEM_PERMISSAO)),
 				HttpStatus.UNAUTHORIZED);
 	}
+
+	public static ResponseEntity<?> ErroToken(String message) {
+		
+		return new ResponseEntity<CustomErrorType> (new CustomErrorType(message), HttpStatus.UNAUTHORIZED);
+	}
 }

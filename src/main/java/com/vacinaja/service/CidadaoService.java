@@ -23,7 +23,7 @@ public interface CidadaoService {
     public void atualizarCidadao(CidadaoDTO cidadaoDTO, Cidadao cidadao);
 
 
-	public boolean validarUsuarioSenha(Cidadao cidadao);
+	public boolean validarUsuarioSenha(String cpf, String senha);
 
 	public boolean validarRequisicao(String header,String cpf) throws ServletException;
 	

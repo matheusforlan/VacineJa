@@ -25,11 +25,15 @@ import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import javax.servlet.ServletException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -85,13 +89,23 @@ public class FuncionarioApiController {
     }
 
     @RequestMapping(value = "/ativar-comorbidade", method = RequestMethod.POST)
-    public ResponseEntity<?> ativarComorbidade(@RequestBody String comorbidade){
-        return null;
+    public ResponseEntity<?> ativarComorbidade(@RequestBody String comorbidade,
+    		@RequestHeader ("Authorization") String header){
+        
+    	ResponseEntity<?> erroRequisicao = validarRequisicao(header);
+    	if (erroRequisicao != null) return  erroRequisicao;
+    	
+    	return null;
     }
 
     // ------------------------Listar Pessoas não habilitdas que possuem alguma comorbidade X ----------------------------------
     @RequestMapping(value = "/listagem-cidadaos/{comorbidade}", method = RequestMethod.GET)
-    public ResponseEntity<?> listarCidadaosComComorbidadesAtivadas(@RequestParam String comorbidade){
+    public ResponseEntity<?> listarCidadaosComComorbidadesAtivadas(@RequestParam String comorbidade,
+    		@RequestHeader ("Authorization") String header){
+    	
+    	ResponseEntity<?> erroRequisicao = validarRequisicao(header);
+    	if (erroRequisicao != null) return  erroRequisicao;
+    	
         List<Cidadao> cidadaos = geraCidadaosNaoHabilitadosComComorbidade(comorbidade);
         if(cidadaos.isEmpty()) {
             return new ResponseEntity<String>("Não foi possível encontrar cidadãos com essa comorbidade na base de dados.", HttpStatus.NOT_FOUND);
@@ -102,8 +116,13 @@ public class FuncionarioApiController {
     
     // ------------------------Listar Pessoas não habilitdas que possuem alguma Profissoa X ----------------------------------
     @RequestMapping(value = "/listagem-cidadaos/{profissao}", method = RequestMethod.GET)
-    public ResponseEntity<?> listarCidadaosComProfissaoAtivada(@RequestParam String profissao){
-        List<Cidadao> cidadaos = geraCidadaosNaoHabilitadosComProfissao(profissao);
+    public ResponseEntity<?> listarCidadaosComProfissaoAtivada(@RequestParam String profissao,
+    	@RequestHeader ("Authorization") String header){
+        
+    	ResponseEntity<?> erroRequisicao = validarRequisicao(header);
+    	if (erroRequisicao != null) return  erroRequisicao;
+    	
+    	List<Cidadao> cidadaos = geraCidadaosNaoHabilitadosComProfissao(profissao);
         if(cidadaos.isEmpty()) {
             return new ResponseEntity<String>("Não foi possível encontrar cidadãos com essa profissão na base de dados.", HttpStatus.NOT_FOUND);
     
@@ -113,7 +132,12 @@ public class FuncionarioApiController {
 
     // ------------------------Listar Pessoas não habilitdas que possuem a idade maior ou igual a uma idade X ----------------------------
     @RequestMapping(value = "/listagem-cidadaos/{idade}", method = RequestMethod.GET)
-    public ResponseEntity<?> listarCidadaosComIdadeMinima(@RequestParam int idade){
+    public ResponseEntity<?> listarCidadaosComIdadeMinima(@RequestParam int idade, 
+    		@RequestHeader ("Authorization") String header){
+    	
+    	ResponseEntity<?> erroRequisicao = validarRequisicao(header);
+    	if (erroRequisicao != null) return  erroRequisicao;
+    	
         List<Cidadao> cidadaos = geraCidadaosNaoHabilitadosComIdadeMinima(idade);
         if(cidadaos.isEmpty()) {
             return new ResponseEntity<String>("Não foi possível encontrar cidadãos com idade no mínimo igual a " + idade + ".", HttpStatus.NOT_FOUND);
@@ -123,8 +147,13 @@ public class FuncionarioApiController {
 
     // ---------------------------Ativar idade minima -----------------------------------------------------------------------
     @RequestMapping(value = "/habilitar-idade/{idade}", method = RequestMethod.PUT)
-    public ResponseEntity<?> habilitarCidadaosComIdadeMinima(@RequestParam int idade){
-        List<Cidadao> cidadaos = geraCidadaosNaoHabilitadosComIdadeMinima(idade);
+    public ResponseEntity<?> habilitarCidadaosComIdadeMinima(@RequestParam int idade, 
+    		@RequestHeader ("Authorization") String header ){
+    	
+    	ResponseEntity<?> erroRequisicao = validarRequisicao(header);
+    	if (erroRequisicao != null) return  erroRequisicao;
+    	
+    	List<Cidadao> cidadaos = geraCidadaosNaoHabilitadosComIdadeMinima(idade);
         if(cidadaos.isEmpty()) {
             return new ResponseEntity<String>("Não foi possível encontrar cidadãos com idade no mínimo igual a " + idade + ".", HttpStatus.NOT_FOUND);
         }
@@ -137,8 +166,13 @@ public class FuncionarioApiController {
 
     // ------------------------Habilitar Pessoas que possuem alguma comorbidade X ----------------------------------
     @RequestMapping(value = "/habilitar-comorbidade/{comorbidade}", method = RequestMethod.PUT)
-    public ResponseEntity<?> habilitarCidadaosComComorbidade(@RequestParam String comorbidade){
-        List<Cidadao> cidadaos = geraCidadaosNaoHabilitadosComComorbidade(comorbidade);
+    public ResponseEntity<?> habilitarCidadaosComComorbidade(@RequestParam String comorbidade,
+    		@RequestHeader ("Authorization") String header){
+        
+    	ResponseEntity<?> erroRequisicao = validarRequisicao(header);
+    	if (erroRequisicao != null) return  erroRequisicao;
+    	
+    	List<Cidadao> cidadaos = geraCidadaosNaoHabilitadosComComorbidade(comorbidade);
         if(cidadaos.isEmpty()) {
             return new ResponseEntity<String>("Não foi possível encontrar cidadãos com essa comorbidade na base de dados.", HttpStatus.NOT_FOUND);
         }
@@ -152,8 +186,13 @@ public class FuncionarioApiController {
 
     // ------------------------Habilitar Pessoas que possuem alguma Profissoa X ----------------------------------
     @RequestMapping(value = "/habilitar-profissao/{profissao}", method = RequestMethod.PUT)
-    public ResponseEntity<?> habilitarCidadaosComProfissao(@RequestParam String profissao){
-        List<Cidadao> cidadaos = geraCidadaosNaoHabilitadosComProfissao(profissao);
+    public ResponseEntity<?> habilitarCidadaosComProfissao(@RequestParam String profissao,
+    		@RequestHeader ("Authorization") String header){
+        
+    	ResponseEntity<?> erroRequisicao = validarRequisicao(header);
+    	if (erroRequisicao != null) return  erroRequisicao;
+    	
+    	List<Cidadao> cidadaos = geraCidadaosNaoHabilitadosComProfissao(profissao);
         if(cidadaos.isEmpty()) {
             return new ResponseEntity<String>("Não foi possível encontrar cidadãos com essa profissão na base de dados.", HttpStatus.NOT_FOUND);
     
@@ -164,15 +203,18 @@ public class FuncionarioApiController {
         }
         
         return new ResponseEntity<List<Cidadao>>(cidadaos, HttpStatus.OK);
-    
-
+   
 
     }
 
     // ------------------------------------------ metodo para listar vacinas com lotes disponiveis ------------------------------------------
     @RequestMapping(value = "/listar-vacinas-disponiveis", method = RequestMethod.GET)
-    public ResponseEntity<?> listarVacinasDisponiveis() {
-        List<Vacina> vacinas = vacinaService.listarVacinas();
+    public ResponseEntity<?> listarVacinasDisponiveis(@RequestHeader ("Authorization") String header) {
+        
+    	ResponseEntity<?> erroRequisicao = validarRequisicao(header);
+    	if (erroRequisicao != null) return  erroRequisicao;
+    	
+    	List<Vacina> vacinas = vacinaService.listarVacinas();
 
         if (vacinas.isEmpty()) {
             return ErroVacina.erroSemVacinasCadastradas();
@@ -211,8 +253,12 @@ public class FuncionarioApiController {
 
     // metodo que olha se os cidadãos ja podem tomar a dose 2
     @RequestMapping(value = "/checar-situação-cidadaos-para-dose2", method = RequestMethod.PUT)
-    public ResponseEntity<?> checarCidadaos(){
-        List<Cidadao> cidadaos = cidadaoService.getCidadaosBySituacao(EnumSituacoes.TOMOU_DOSE_1);
+    public ResponseEntity<?> checarCidadaos(@RequestHeader ("Authorization") String header){
+        
+    	ResponseEntity<?> erroRequisicao = validarRequisicao(header);
+    	if (erroRequisicao != null) return  erroRequisicao;
+    	
+    	List<Cidadao> cidadaos = cidadaoService.getCidadaosBySituacao(EnumSituacoes.TOMOU_DOSE_1);
         List<Cidadao> aux = new ArrayList<>();
         if(!cidadaos.isEmpty()){
             for(Cidadao cidadao: cidadaos){
@@ -270,6 +316,23 @@ public class FuncionarioApiController {
             }
         }
         return aux;
+    }
+    
+    
+    public ResponseEntity<?> validarRequisicao(String header) {
+    	ResponseEntity<?> result = null;
+    	try {
+			if(!funcionarioService.validarRequisicao(header)) {
+				result = ErroCidadao.SemPermissao();
+				return result;
+			}
+		} catch (ServletException e) {
+			result = ErroCidadao.ErroToken(e.getMessage());
+			return result;
+		}
+    	
+    	return result;
+    	
     }
 
 }

@@ -10,7 +10,9 @@ import org.springframework.stereotype.Service;
 
 import com.vacinaja.filtros.TokenFiltro;
 import com.vacinaja.model.Cidadao;
+import com.vacinaja.model.RespostaLogin;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.SignatureException;
@@ -24,20 +26,26 @@ public final class JwtService {
 	@Autowired
 	FuncionarioService funcionarioService;
 	
+	@Autowired 
+	AdminService adminService;
+	
 	private final String TOKEN_KEY = "login do robin";
 
-	public RespostaLogin autenticarCidadao(Cidadao cidadao) {
+	public RespostaLogin autenticar(String cpf, String senha) {
 		
-		if (!cidadaoService.validarUsuarioSenha(cidadao)) {
-			new RespostaLogin("Usuario ou senha inválidos. Não foi possível realizar o login.")	;
+		if (!cidadaoService.validarUsuarioSenha(cpf, senha)) {
+			 return new RespostaLogin("Usuario ou senha inválidos. Não foi possível realizar o login.")	;
 			
 		} 
 		
-		String token = gerarToken(cidadao.getCpf());
+		String token = gerarToken(cpf);
 		
 		return new RespostaLogin(token);
 		
 	}
+	
+	
+	
 
 	private String gerarToken(String id) {
 		return Jwts.builder().setSubject(id)
@@ -45,25 +53,9 @@ public final class JwtService {
 				.setExpiration(new Date(System.currentTimeMillis() + 60 * 60 * 1000)).compact(); // 1 hora
 	}
 	
-	public String getIdbyToken(String authorizationHeader) throws ServletException{
-		
-		if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
-			throw new ServletException("Token inexistente ou mal formatado!");
-		}
-
-		
-		String token = authorizationHeader.substring(TokenFiltro.TOKEN_INDEX);
-
-		String subject = null;
-		try {
-			subject = Jwts.parser().setSigningKey(TOKEN_KEY).parseClaimsJws(token).getBody().getSubject();
-		} catch (SignatureException e) {
-			throw new ServletException("Token invalido ou expirado!");
-		}
-		return subject;
-	}
 	
-	public String getIdToken(String header) throws ServletException {
+	
+	public String getIdbyToken(String header) throws ServletException {
 		 if ( header == null || !header.startsWith("Bearer ")) {
 			 throw new ServletException("Token inexistente ou mal formado.");
 		 }
@@ -73,11 +65,13 @@ public final class JwtService {
 		 try {
 			  idRequest = Jwts.parser().setSigningKey(TOKEN_KEY).parseClaimsJws(token)
 					 .getBody().getSubject();
-		 }catch (SignatureException e) {
+		 }catch (SignatureException| ExpiredJwtException e) {
 			 throw new ServletException("Token invalido ou expirado.");
 		 }
 		 return idRequest;
 	}
+
+	
 	
 	
 }

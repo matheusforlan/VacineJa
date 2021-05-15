@@ -31,7 +31,7 @@ public class TokenFiltro extends GenericFilterBean {
 		String header = req.getHeader("Authorization");
 
 		if (header == null || !header.startsWith("Bearer ")) {
-			throw new ServletException("Token inexistente ou mal formatado!");
+			throw new ServletException("Token inexistente ou mal formatado.");
 		}
 
 	
@@ -42,7 +42,7 @@ public class TokenFiltro extends GenericFilterBean {
 		} catch(SignatureException | ExpiredJwtException | MalformedJwtException | PrematureJwtException | UnsupportedJwtException | IllegalArgumentException e) {
 			
 			
-           		((HttpServletResponse) response).sendError(HttpServletResponse.SC_UNAUTHORIZED, e.getMessage());
+           		((HttpServletResponse) response).sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token expirado ou mal formado");
             		
 			return;
         }
