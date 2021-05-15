@@ -14,7 +14,7 @@ public class MetodosAuxiliares {
         DateTime hoje = new DateTime();
         DateTime dataNascimento = new DateTime(dataNasc);
         
-        Years anos = Years.yearsBetween(hoje, dataNascimento);
+        Years anos = Years.yearsBetween(dataNascimento, hoje);
         return anos.getYears();
 
         

@@ -8,11 +8,15 @@ import com.vacinaja.model.situacoes.*;
 import com.vacinaja.service.*;
 import com.vacinaja.util.*;
 import java.util.Optional;
+
+import javax.servlet.ServletException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -35,11 +39,19 @@ public class AplicacaoVacinaApiController {
 
     @Autowired
     LoteService loteService;
+    
+    @Autowired
+    FuncionarioService funcionarioService;
 
     //---------------------------------Cadastro de aplicacao da primeira dose da vacina ------------------------------------
     @RequestMapping(value = "/vacinacao/registrar-aplicacao-dose-1", method = RequestMethod.POST)
-    public ResponseEntity<?> cadastrarAplicacaoDose1(@RequestBody AplicacaoVacinaDTO aplicacaoVacinaDTO){
-        //<AplicacaoVacina> optionalAplicacaoVacina = aplicacaoVacinaService.getById(aplicacaoVacinaDTO.getCpfCidadao());
+    public ResponseEntity<?> cadastrarAplicacaoDose1(@RequestBody AplicacaoVacinaDTO aplicacaoVacinaDTO,
+    		@RequestHeader ("Authorization") String header){
+        
+    	ResponseEntity<?> erroRequisicao = validarRequisicao(header);
+    	if (erroRequisicao != null) return  validarRequisicao(header);
+    	
+    	//<AplicacaoVacina> optionalAplicacaoVacina = aplicacaoVacinaService.getById(aplicacaoVacinaDTO.getCpfCidadao());
         Optional<Vacina> optionalVacina = vacinaService.getVacinaById(aplicacaoVacinaDTO.getIdVacina());
         Optional<Cidadao> optionalCidadao = cidadaoService.getCidadaoByCpf(aplicacaoVacinaDTO.getCpfCidadao());
         if(!optionalCidadao.isPresent()){
@@ -88,8 +100,13 @@ public class AplicacaoVacinaApiController {
 
      //---------------------------------Cadastro de aplicacao da segunda dose da vacina ------------------------------------
     @RequestMapping(value = "/vacinacao/registrar-aplicacao-dose-2", method = RequestMethod.PUT)
-    public ResponseEntity<?> cadastrarAplicacaoDose2(@RequestBody AplicacaoVacinaDTO aplicacaoVacinaDTO){
-        Optional<Cidadao> optionalCidadao = cidadaoService.getCidadaoByCpf(aplicacaoVacinaDTO.getCpfCidadao());
+    public ResponseEntity<?> cadastrarAplicacaoDose2(@RequestBody AplicacaoVacinaDTO aplicacaoVacinaDTO,
+    		@RequestHeader ("Authorization") String header){
+        
+    	ResponseEntity<?> erroRequisicao = validarRequisicao(header);
+    	if (erroRequisicao != null) return  validarRequisicao(header);
+    	
+    	Optional<Cidadao> optionalCidadao = cidadaoService.getCidadaoByCpf(aplicacaoVacinaDTO.getCpfCidadao());
         if(!optionalCidadao.isPresent()){
             return ErroCidadao.erroCidadaoNaoEncontrado(aplicacaoVacinaDTO.getCpfCidadao());
         }
@@ -135,6 +152,22 @@ public class AplicacaoVacinaApiController {
         aplicacaoVacinaService.salvar(aplicacao);
 
         return new ResponseEntity<AplicacaoVacina>(aplicacao, HttpStatus.ACCEPTED);   
+    }
+    
+    public ResponseEntity<?> validarRequisicao(String header) {
+    	ResponseEntity<?> result = null;
+    	try {
+			if(!funcionarioService.validarRequisicao(header)) {
+				result = ErroCidadao.SemPermissao();
+				return result;
+			}
+		} catch (ServletException e) {
+			result = ErroCidadao.ErroToken(e.getMessage());
+			return result;
+		}
+    	
+    	return result;
+    	
     }
     
 }

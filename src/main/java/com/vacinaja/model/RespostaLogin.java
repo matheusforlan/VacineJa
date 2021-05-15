@@ -1,4 +1,4 @@
-package com.vacinaja.service;
+package com.vacinaja.model;
 
 public class RespostaLogin {
 

@@ -3,11 +3,14 @@ package com.vacinaja.controller;
 import java.util.List;
 import java.util.Optional;
 
+import javax.servlet.ServletException;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -38,7 +41,10 @@ public class AdminApiController {
 	
 	//-------------------------Listar o funcionarios ainda nao aprovado, para o Administrador------------------------
 	@RequestMapping(value = "/listar-func-n-aprovados", method = RequestMethod.GET)
-	public ResponseEntity<?> listarFuncionariosNaoAprovados() {
+	public ResponseEntity<?> listarFuncionariosNaoAprovados(@RequestHeader ("Authorization") String header) {
+		
+		ResponseEntity<?> erroRequisicao = validarRequisicao(header);
+    	if (erroRequisicao != null) return  erroRequisicao;
 		
 		List<Funcionario> funcionarios = funcionarioService.listarFuncionariosNaoAprovados();
 	
@@ -54,13 +60,16 @@ public class AdminApiController {
 	
 	//--------------------------- Aprovar um funcionario-----------------------------------------------------------
 	@RequestMapping(value = "/aprovar-funcionario", method = RequestMethod.PUT)
-	public ResponseEntity<?> aprovarFuncionario(String cpf) {
+	public ResponseEntity<?> aprovarFuncionario(String cpf, @RequestHeader ("Authorization") String header) {
 		
-		 Optional<Cidadao> optionalCidadao = cidadaoService.getCidadaoByCpf(cpf);
+		ResponseEntity<?> erroRequisicao = validarRequisicao(header);
+    	if (erroRequisicao != null) return  erroRequisicao;
+		 
+		Optional<Cidadao> optionalCidadao = cidadaoService.getCidadaoByCpf(cpf);
 	        
-	     if(!optionalCidadao.isPresent()){
-	        return ErroCidadao.erroCidadaoNaoEncontrado(cpf);
-	     }
+	    if(!optionalCidadao.isPresent()){
+	       return ErroCidadao.erroCidadaoNaoEncontrado(cpf);
+	    }
 		
 		
 		Optional<Funcionario> optionalFuncionario = funcionarioService.getFuncionarioByCpf(cpf);
@@ -76,8 +85,17 @@ public class AdminApiController {
 		
 		return new ResponseEntity<Funcionario>(funcionario, HttpStatus.OK);
 	}
+	
+	
+	//--------------------------- Remover um funcionario ------------------------------------------------------------
+	
 	@RequestMapping(value = "/remover-funcionario",method = RequestMethod.DELETE)
-	public ResponseEntity<?> removerFuncionario(@RequestBody String cpf) {
+	public ResponseEntity<?> removerFuncionario(@RequestBody String cpf, 
+			@RequestHeader ("Authorization") String header ) {
+		
+		ResponseEntity<?> erroRequisicao = validarRequisicao(header);
+    	if (erroRequisicao != null) return  erroRequisicao;
+		
 		Optional<Funcionario> optionalFuncionario = funcionarioService.getFuncionarioByCpf(cpf);
 		if (!optionalFuncionario.isPresent()) {
 			return ErroFuncionario.erroFuncionarioNaoEncontrado(cpf);
@@ -94,4 +112,20 @@ public class AdminApiController {
 		
 		return new ResponseEntity<CidadaoDTO>(cidadaoDTO, HttpStatus.OK);
 	}
+	
+	public ResponseEntity<?> validarRequisicao(String header) {
+    	ResponseEntity<?> result = null;
+    	try {
+			if(!adminService.validarRequisicao(header)) {
+				result = ErroCidadao.SemPermissao();
+				return result;
+			}
+		} catch (ServletException e) {
+			result = ErroCidadao.ErroToken(e.getMessage());
+			return result;
+		}
+    	
+    	return result;
+    	
+    }
 }

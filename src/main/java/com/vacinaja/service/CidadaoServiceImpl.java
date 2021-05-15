@@ -5,7 +5,7 @@ import com.vacinaja.model.Cidadao;
 import com.vacinaja.model.situacoes.EnumSituacoes;
 import com.vacinaja.repository.CidadaoRepository;
 
-import java.security.SignatureException;
+
 import java.util.List;
 
 import java.util.Optional;
@@ -63,8 +63,8 @@ public class CidadaoServiceImpl implements CidadaoService{
     }
 
 	@Override
-	public boolean validarUsuarioSenha(Cidadao cidadao) {
-		Optional<Cidadao> optionalCidadao = getCidadaoByCpf(cidadao.getCpf());
+	public boolean validarUsuarioSenha(String cpf, String senha) {
+		Optional<Cidadao> optionalCidadao = getCidadaoByCpf(cpf);
 		
 		if (!optionalCidadao.isPresent()) {
 			return false;
@@ -72,20 +72,20 @@ public class CidadaoServiceImpl implements CidadaoService{
 		
 		
 		
-		Cidadao cidadaoBD = optionalCidadao.get();
-		return cidadaoBD.getSenha().equals(cidadao.getSenha());
+		Cidadao cidadao = optionalCidadao.get();
+		return cidadao.getSenha().equals(senha);
 
 	}
 
 	@Override
 	public boolean validarRequisicao(String header,String cpf) throws ServletException {
-		String idRequester = jwtService.getIdToken(header);
+		String idRequester = getIdRequester(header);
 		if (!idRequester.equals(cpf)) {
 			return false;
 		}
 		Optional<Cidadao> optionalCidadao = cidadaoRepository.findById(idRequester);
 		Cidadao cidadao = optionalCidadao.get();
-		return optionalCidadao.isPresent() && validarUsuarioSenha(cidadao);
+		return validarUsuarioSenha(cidadao.getCpf(), cidadao.getSenha());
 		
 		
 	}
