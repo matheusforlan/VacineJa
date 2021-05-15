@@ -339,7 +339,7 @@ public class FuncionarioApiController {
         
         List<Cidadao> aux = new ArrayList<Cidadao>();
         for(Cidadao cidadao : cidadaos){
-            if(cidadao.getComorbidades().contains(profissao)){
+            if(cidadao.getProfissao().equals(profissao)){
                 aux.add(cidadao);
             }
         }

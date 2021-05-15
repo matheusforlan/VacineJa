@@ -117,6 +117,9 @@ public class AplicacaoVacinaApiController {
         if(situacao instanceof NaoHabilitado){
             return ErroAplicacao.erroCidadaoNaoHabilitadoParaVacina(aplicacaoVacinaDTO.getCpfCidadao());
         }
+        if(situacao instanceof TomouDose1){
+            return ErroAplicacao.erroCidadaoNaoHabilitadoParaVacina(aplicacaoVacinaDTO.getCpfCidadao());
+        }
         if(situacao instanceof VacinacaoFinalizada){
             return ErroAplicacao.erroCidadaoJaFinalizouVacinacao(aplicacaoVacinaDTO.getCpfCidadao());
         }
