@@ -4,7 +4,6 @@ import java.sql.Date;
 
 public class CidadaoDTO {
 
-    
     private String cpf;
 
     private String nome;

@@ -53,13 +53,6 @@ public class VacinaApiController {
 		} catch (ServletException e) {
 			return  ErroCidadao.ErroToken(e.getMessage());	
 		}
-    	
-    	
-    	Optional<Vacina> vacina = vacinaService.getVacinaById(vacinaDTO.getId());
-
-        if (vacina.isPresent()) {
-            return ErroVacina.erroVacinaJaCadastrada(vacinaDTO.getId());
-        }
 
         vacinaService.cadastrarVacina(vacinaDTO);
 

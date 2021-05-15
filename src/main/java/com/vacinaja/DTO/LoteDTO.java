@@ -4,8 +4,6 @@ import java.sql.Date;
 
 public class LoteDTO {
 
-    private long id;
-
     private long vacinaId;
 
     private int quantidadeDoses;
@@ -16,10 +14,6 @@ public class LoteDTO {
         this.vacinaId = vacinaId;
         this.quantidadeDoses = quantidadeDoses;
         this.dataValidade = dataValidade;
-    }
-
-    public long getId() {
-        return this.id;
     }
 
     public long getVacinaId() {

@@ -124,12 +124,6 @@ public class CidadaoApiController {
             return ErroAplicacao.erroCidadaoNaoHabilitadoParaVacina(agendamentoVacinacaoDTO.getCpfCidadao());
         }
 
-        Optional<AgendamentoVacinacao> optionalAgendamentoVacinacao = agendamentoVacinacaoService.getAgendamentoVacinacaoById(agendamentoVacinacaoDTO.getId());
-
-        if (optionalAgendamentoVacinacao.isPresent()) {
-            return ErroAgendamentoVacinacao.erroDataHorarioJaAgendados(agendamentoVacinacaoDTO.getId());
-        }
-
         agendamentoVacinacaoService.cadastrarAgendamentoVacinacao(agendamentoVacinacaoDTO, cidadao);
 
         return new ResponseEntity<AgendamentoVacinacaoDTO>(agendamentoVacinacaoDTO, HttpStatus.OK);

@@ -1,6 +1,7 @@
 package com.vacinaja.controller;
 
 import com.vacinaja.DTO.FuncionarioDTO;
+import com.vacinaja.DTO.LoteDTO;
 import com.vacinaja.model.AplicacaoVacina;
 import com.vacinaja.model.Cidadao;
 import com.vacinaja.model.Funcionario;
@@ -39,6 +40,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.util.UriComponentsBuilder;
 
 
 
@@ -162,7 +164,7 @@ public class FuncionarioApiController {
             cidadao.getSituacao().getSituacao().mudaSituacao(cidadao);
             cidadaoService.salvarCidadao(cidadao);
             cidadaosNotificados.add("SMS e e-mail enviados para " + cidadao.getNome() + " - " + cidadao.getEmail()+
-            		" - " + cidadao.getTelefone() + " - para tomar a primeira dose. \n");
+            		" - " + cidadao.getTelefone() + " - para tomar a primeira dose.");
         }
         return new ResponseEntity<List<String>>(cidadaosNotificados, HttpStatus.OK);
     }
@@ -184,7 +186,7 @@ public class FuncionarioApiController {
             cidadao.getSituacao().getSituacao().mudaSituacao(cidadao);
             cidadaoService.salvarCidadao(cidadao);
             cidadaosNotificados.add("SMS e e-mail enviados para " + cidadao.getNome() + " - " + cidadao.getEmail()+
-            		" - " + cidadao.getTelefone() + " - para tomar a primeira dose. \n");
+            		" - " + cidadao.getTelefone() + " - para tomar a primeira dose.");
         }
         return new ResponseEntity<List<String>>(cidadaosNotificados, HttpStatus.OK);
 
@@ -208,11 +210,37 @@ public class FuncionarioApiController {
             cidadao.getSituacao().getSituacao().mudaSituacao(cidadao);
             cidadaoService.salvarCidadao(cidadao);
             cidadaosNotificados.add("SMS e e-mail enviados para " + cidadao.getNome() + " - " + cidadao.getEmail()+
-            		" - " + cidadao.getTelefone() + " - para tomar a primeira dose. \n");
+            		" - " + cidadao.getTelefone() + " - para tomar a primeira dose.");
         }
         
         return new ResponseEntity<List<String>>(cidadaosNotificados, HttpStatus.OK);
    
+    }
+
+    // ------------------------------------------ cadastro de lotes de vacina no sistema ------------------------------------------
+    @RequestMapping(value = "/cadastro-lote", method = RequestMethod.POST)
+    public ResponseEntity<?> cadastrarLote(@RequestBody LoteDTO loteDTO, UriComponentsBuilder ucBuilder,
+    		@RequestHeader ("Authorization") String header) {
+        
+    	ResponseEntity<?> erroRequisicao = validarRequisicao(header);
+    	if (erroRequisicao != null) return  erroRequisicao;
+    	
+    	Optional<Vacina> optionalVacina = vacinaService.getVacinaById(loteDTO.getVacinaId());
+
+        if (!optionalVacina.isPresent()) {
+            return ErroVacina.erroVacinaNaoEncontrada(loteDTO.getVacinaId());
+        }
+
+        Vacina vacina = optionalVacina.get();
+
+        if (!vacina.isDisponivel() && loteDTO.getQuantidadeDoses()>0) {
+            vacina.tornaDisponivel();
+            vacinaService.salvarVacina(vacina);
+        }
+
+        loteService.cadastrarLote(loteDTO);
+
+        return new ResponseEntity<LoteDTO>(loteDTO, HttpStatus.OK);
     }
 
     // ------------------------------------------ metodo para listar vacinas com lotes disponiveis ------------------------------------------
@@ -274,7 +302,9 @@ public class FuncionarioApiController {
 
                 if(calculaDias(aplicacaoVacina.getVacina(), aplicacaoVacina.getDataAplicacao())) {
                 	cidadaosNotificados.add("SMS e e-mail enviados para " + cidadao.getNome() + " - " + cidadao.getEmail()+
-                    		" - " + cidadao.getTelefone() + " - para tomar a segunda dose. \n");
+                    		" - " + cidadao.getTelefone() + " - para tomar a segunda dose.");
+                    cidadao.setSituacao(EnumSituacoes.HABILITADO_DOSE_2);
+                    cidadaoService.salvarCidadao(cidadao);
                 }
             }
         }

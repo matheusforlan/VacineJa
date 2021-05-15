@@ -2,8 +2,6 @@ package com.vacinaja.DTO;
 
 public class VacinaDTO {
 
-    private Long id;
-
     private String nome;
 
     private String fabricante;
@@ -17,10 +15,6 @@ public class VacinaDTO {
         this.fabricante = fabricante;
         this.diasParaSegundaDose = diasParaSegundaDose;
         this.quantidadeDoses = quantidadeDoses;
-    }
-
-    public Long getId() {
-        return this.id;
     }
 
     public String getNome() {

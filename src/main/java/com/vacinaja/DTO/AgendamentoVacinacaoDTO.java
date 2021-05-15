@@ -2,8 +2,6 @@ package com.vacinaja.DTO;
 
 public class AgendamentoVacinacaoDTO {
 
-    private long id;
-
     private String cpfCidadao;
 
     private String data;
@@ -14,10 +12,6 @@ public class AgendamentoVacinacaoDTO {
         this.cpfCidadao = cpfCidadao;
         this.data = data;
         this.horario = horario;
-    }
-
-    public long getId() {
-        return this.id;
     }
 
     public String getCpfCidadao() {

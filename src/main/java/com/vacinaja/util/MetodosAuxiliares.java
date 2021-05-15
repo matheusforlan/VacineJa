@@ -41,7 +41,7 @@ public class MetodosAuxiliares {
         DateTime hoje = new DateTime();
         DateTime data = new DateTime(dataAplicacao);
         
-        Days dias = Days.daysBetween(hoje, data);
+        Days dias = Days.daysBetween(data, hoje);
         return dias.getDays();
 
     }
